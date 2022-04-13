@@ -63,6 +63,16 @@ namespace SudokuSolver.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap loading_buffering {
+            get {
+                object obj = ResourceManager.GetObject("loading-buffering", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap sudokuGrid {
             get {
                 object obj = ResourceManager.GetObject("sudokuGrid", resourceCulture);

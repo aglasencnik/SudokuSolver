@@ -1,3 +1,5 @@
+using System.Collections;
+
 namespace SudokuSolver
 {
     public partial class MainForm : Form
@@ -168,6 +170,8 @@ namespace SudokuSolver
         private int tbx_79_number;
         private int tbx_80_number;
         private int tbx_81_number;
+
+        ArrayList resultList;
 
         #endregion
 
@@ -364,6 +368,7 @@ namespace SudokuSolver
         {
             try
             {
+                pbx_loading.Visible = false;
                 resetLoad();
             }
             catch (Exception ex)
@@ -1413,9 +1418,13 @@ namespace SudokuSolver
                 this.ActiveControl = lbl_version;
                 if (numOfInputs >= 10)
                 {
+                    pbx_loading.Visible = true;
                     disable_tbx();
                     get_tbx_variables();
                     set_tbx_color();
+                    sudokuSolver solver = new sudokuSolver(serializeGrid());
+                    solver.solve();
+                    pbx_loading.Visible = false;
                 }
                 else
                 {
@@ -1430,587 +1439,609 @@ namespace SudokuSolver
 
         private void disable_tbx()
         {
-            tbx_1.ReadOnly = true;
-            tbx_2.ReadOnly = true;
-            tbx_3.ReadOnly = true;
-            tbx_4.ReadOnly = true;
-            tbx_5.ReadOnly = true;
-            tbx_6.ReadOnly = true;
-            tbx_7.ReadOnly = true;
-            tbx_8.ReadOnly = true;
-            tbx_9.ReadOnly = true;
-            tbx_10.ReadOnly = true;
-            tbx_11.ReadOnly = true;
-            tbx_12.ReadOnly = true;
-            tbx_13.ReadOnly = true;
-            tbx_14.ReadOnly = true;
-            tbx_15.ReadOnly = true;
-            tbx_16.ReadOnly = true;
-            tbx_17.ReadOnly = true;
-            tbx_18.ReadOnly = true;
-            tbx_19.ReadOnly = true;
-            tbx_20.ReadOnly = true;
-            tbx_21.ReadOnly = true;
-            tbx_22.ReadOnly = true;
-            tbx_23.ReadOnly = true;
-            tbx_24.ReadOnly = true;
-            tbx_25.ReadOnly = true;
-            tbx_26.ReadOnly = true;
-            tbx_27.ReadOnly = true;
-            tbx_28.ReadOnly = true;
-            tbx_29.ReadOnly = true;
-            tbx_30.ReadOnly = true;
-            tbx_31.ReadOnly = true;
-            tbx_32.ReadOnly = true;
-            tbx_33.ReadOnly = true;
-            tbx_34.ReadOnly = true;
-            tbx_35.ReadOnly = true;
-            tbx_36.ReadOnly = true;
-            tbx_37.ReadOnly = true;
-            tbx_38.ReadOnly = true;
-            tbx_39.ReadOnly = true;
-            tbx_40.ReadOnly = true;
-            tbx_41.ReadOnly = true;
-            tbx_42.ReadOnly = true;
-            tbx_43.ReadOnly = true;
-            tbx_44.ReadOnly = true;
-            tbx_45.ReadOnly = true;
-            tbx_46.ReadOnly = true;
-            tbx_47.ReadOnly = true;
-            tbx_48.ReadOnly = true;
-            tbx_49.ReadOnly = true;
-            tbx_50.ReadOnly = true;
-            tbx_51.ReadOnly = true;
-            tbx_52.ReadOnly = true;
-            tbx_53.ReadOnly = true;
-            tbx_54.ReadOnly = true;
-            tbx_55.ReadOnly = true;
-            tbx_56.ReadOnly = true;
-            tbx_57.ReadOnly = true;
-            tbx_58.ReadOnly = true;
-            tbx_59.ReadOnly = true;
-            tbx_60.ReadOnly = true;
-            tbx_61.ReadOnly = true;
-            tbx_62.ReadOnly = true;
-            tbx_63.ReadOnly = true;
-            tbx_64.ReadOnly = true;
-            tbx_65.ReadOnly = true;
-            tbx_66.ReadOnly = true;
-            tbx_67.ReadOnly = true;
-            tbx_68.ReadOnly = true;
-            tbx_69.ReadOnly = true;
-            tbx_70.ReadOnly = true;
-            tbx_71.ReadOnly = true;
-            tbx_72.ReadOnly = true;
-            tbx_73.ReadOnly = true;
-            tbx_74.ReadOnly = true;
-            tbx_75.ReadOnly = true;
-            tbx_76.ReadOnly = true;
-            tbx_77.ReadOnly = true;
-            tbx_78.ReadOnly = true;
-            tbx_79.ReadOnly = true;
-            tbx_80.ReadOnly = true;
-            tbx_81.ReadOnly = true;
+            try
+            {
+                tbx_1.ReadOnly = true;
+                tbx_2.ReadOnly = true;
+                tbx_3.ReadOnly = true;
+                tbx_4.ReadOnly = true;
+                tbx_5.ReadOnly = true;
+                tbx_6.ReadOnly = true;
+                tbx_7.ReadOnly = true;
+                tbx_8.ReadOnly = true;
+                tbx_9.ReadOnly = true;
+                tbx_10.ReadOnly = true;
+                tbx_11.ReadOnly = true;
+                tbx_12.ReadOnly = true;
+                tbx_13.ReadOnly = true;
+                tbx_14.ReadOnly = true;
+                tbx_15.ReadOnly = true;
+                tbx_16.ReadOnly = true;
+                tbx_17.ReadOnly = true;
+                tbx_18.ReadOnly = true;
+                tbx_19.ReadOnly = true;
+                tbx_20.ReadOnly = true;
+                tbx_21.ReadOnly = true;
+                tbx_22.ReadOnly = true;
+                tbx_23.ReadOnly = true;
+                tbx_24.ReadOnly = true;
+                tbx_25.ReadOnly = true;
+                tbx_26.ReadOnly = true;
+                tbx_27.ReadOnly = true;
+                tbx_28.ReadOnly = true;
+                tbx_29.ReadOnly = true;
+                tbx_30.ReadOnly = true;
+                tbx_31.ReadOnly = true;
+                tbx_32.ReadOnly = true;
+                tbx_33.ReadOnly = true;
+                tbx_34.ReadOnly = true;
+                tbx_35.ReadOnly = true;
+                tbx_36.ReadOnly = true;
+                tbx_37.ReadOnly = true;
+                tbx_38.ReadOnly = true;
+                tbx_39.ReadOnly = true;
+                tbx_40.ReadOnly = true;
+                tbx_41.ReadOnly = true;
+                tbx_42.ReadOnly = true;
+                tbx_43.ReadOnly = true;
+                tbx_44.ReadOnly = true;
+                tbx_45.ReadOnly = true;
+                tbx_46.ReadOnly = true;
+                tbx_47.ReadOnly = true;
+                tbx_48.ReadOnly = true;
+                tbx_49.ReadOnly = true;
+                tbx_50.ReadOnly = true;
+                tbx_51.ReadOnly = true;
+                tbx_52.ReadOnly = true;
+                tbx_53.ReadOnly = true;
+                tbx_54.ReadOnly = true;
+                tbx_55.ReadOnly = true;
+                tbx_56.ReadOnly = true;
+                tbx_57.ReadOnly = true;
+                tbx_58.ReadOnly = true;
+                tbx_59.ReadOnly = true;
+                tbx_60.ReadOnly = true;
+                tbx_61.ReadOnly = true;
+                tbx_62.ReadOnly = true;
+                tbx_63.ReadOnly = true;
+                tbx_64.ReadOnly = true;
+                tbx_65.ReadOnly = true;
+                tbx_66.ReadOnly = true;
+                tbx_67.ReadOnly = true;
+                tbx_68.ReadOnly = true;
+                tbx_69.ReadOnly = true;
+                tbx_70.ReadOnly = true;
+                tbx_71.ReadOnly = true;
+                tbx_72.ReadOnly = true;
+                tbx_73.ReadOnly = true;
+                tbx_74.ReadOnly = true;
+                tbx_75.ReadOnly = true;
+                tbx_76.ReadOnly = true;
+                tbx_77.ReadOnly = true;
+                tbx_78.ReadOnly = true;
+                tbx_79.ReadOnly = true;
+                tbx_80.ReadOnly = true;
+                tbx_81.ReadOnly = true;
+            }
+            catch (Exception ex)
+            {
+                errorHandler(ex);
+            }
         }
 
         private void get_tbx_variables()
         {
-            tbx_1_number = (tbx_1.Text != "" ? int.Parse(tbx_1.Text) : 0);
-            tbx_2_number = (tbx_2.Text != "" ? int.Parse(tbx_2.Text) : 0);
-            tbx_3_number = (tbx_3.Text != "" ? int.Parse(tbx_3.Text) : 0);
-            tbx_4_number = (tbx_4.Text != "" ? int.Parse(tbx_4.Text) : 0);
-            tbx_5_number = (tbx_5.Text != "" ? int.Parse(tbx_5.Text) : 0);
-            tbx_6_number = (tbx_6.Text != "" ? int.Parse(tbx_6.Text) : 0);
-            tbx_7_number = (tbx_7.Text != "" ? int.Parse(tbx_7.Text) : 0);
-            tbx_8_number = (tbx_8.Text != "" ? int.Parse(tbx_8.Text) : 0);
-            tbx_9_number = (tbx_9.Text != "" ? int.Parse(tbx_9.Text) : 0);
-            tbx_10_number = (tbx_10.Text != "" ? int.Parse(tbx_10.Text) : 0);
-            tbx_11_number = (tbx_11.Text != "" ? int.Parse(tbx_11.Text) : 0);
-            tbx_12_number = (tbx_12.Text != "" ? int.Parse(tbx_12.Text) : 0);
-            tbx_13_number = (tbx_13.Text != "" ? int.Parse(tbx_13.Text) : 0);
-            tbx_14_number = (tbx_14.Text != "" ? int.Parse(tbx_14.Text) : 0);
-            tbx_15_number = (tbx_15.Text != "" ? int.Parse(tbx_15.Text) : 0);
-            tbx_16_number = (tbx_16.Text != "" ? int.Parse(tbx_16.Text) : 0);
-            tbx_17_number = (tbx_17.Text != "" ? int.Parse(tbx_17.Text) : 0);
-            tbx_18_number = (tbx_18.Text != "" ? int.Parse(tbx_18.Text) : 0);
-            tbx_19_number = (tbx_19.Text != "" ? int.Parse(tbx_19.Text) : 0);
-            tbx_20_number = (tbx_20.Text != "" ? int.Parse(tbx_20.Text) : 0);
-            tbx_21_number = (tbx_21.Text != "" ? int.Parse(tbx_21.Text) : 0);
-            tbx_22_number = (tbx_22.Text != "" ? int.Parse(tbx_22.Text) : 0);
-            tbx_23_number = (tbx_23.Text != "" ? int.Parse(tbx_23.Text) : 0);
-            tbx_24_number = (tbx_24.Text != "" ? int.Parse(tbx_24.Text) : 0);
-            tbx_25_number = (tbx_25.Text != "" ? int.Parse(tbx_25.Text) : 0);
-            tbx_26_number = (tbx_26.Text != "" ? int.Parse(tbx_26.Text) : 0);
-            tbx_27_number = (tbx_27.Text != "" ? int.Parse(tbx_27.Text) : 0);
-            tbx_28_number = (tbx_28.Text != "" ? int.Parse(tbx_28.Text) : 0);
-            tbx_29_number = (tbx_29.Text != "" ? int.Parse(tbx_29.Text) : 0);
-            tbx_30_number = (tbx_30.Text != "" ? int.Parse(tbx_30.Text) : 0);
-            tbx_31_number = (tbx_31.Text != "" ? int.Parse(tbx_31.Text) : 0);
-            tbx_32_number = (tbx_32.Text != "" ? int.Parse(tbx_32.Text) : 0);
-            tbx_33_number = (tbx_33.Text != "" ? int.Parse(tbx_33.Text) : 0);
-            tbx_34_number = (tbx_34.Text != "" ? int.Parse(tbx_34.Text) : 0);
-            tbx_35_number = (tbx_35.Text != "" ? int.Parse(tbx_35.Text) : 0);
-            tbx_36_number = (tbx_36.Text != "" ? int.Parse(tbx_36.Text) : 0);
-            tbx_37_number = (tbx_37.Text != "" ? int.Parse(tbx_37.Text) : 0);
-            tbx_38_number = (tbx_38.Text != "" ? int.Parse(tbx_38.Text) : 0);
-            tbx_39_number = (tbx_39.Text != "" ? int.Parse(tbx_39.Text) : 0);
-            tbx_40_number = (tbx_40.Text != "" ? int.Parse(tbx_40.Text) : 0);
-            tbx_41_number = (tbx_41.Text != "" ? int.Parse(tbx_41.Text) : 0);
-            tbx_42_number = (tbx_42.Text != "" ? int.Parse(tbx_42.Text) : 0);
-            tbx_43_number = (tbx_43.Text != "" ? int.Parse(tbx_43.Text) : 0);
-            tbx_44_number = (tbx_44.Text != "" ? int.Parse(tbx_44.Text) : 0);
-            tbx_45_number = (tbx_45.Text != "" ? int.Parse(tbx_45.Text) : 0);
-            tbx_46_number = (tbx_46.Text != "" ? int.Parse(tbx_46.Text) : 0);
-            tbx_47_number = (tbx_47.Text != "" ? int.Parse(tbx_47.Text) : 0);
-            tbx_48_number = (tbx_48.Text != "" ? int.Parse(tbx_48.Text) : 0);
-            tbx_49_number = (tbx_49.Text != "" ? int.Parse(tbx_49.Text) : 0);
-            tbx_50_number = (tbx_50.Text != "" ? int.Parse(tbx_50.Text) : 0);
-            tbx_51_number = (tbx_51.Text != "" ? int.Parse(tbx_51.Text) : 0);
-            tbx_52_number = (tbx_52.Text != "" ? int.Parse(tbx_52.Text) : 0);
-            tbx_53_number = (tbx_53.Text != "" ? int.Parse(tbx_53.Text) : 0);
-            tbx_54_number = (tbx_54.Text != "" ? int.Parse(tbx_54.Text) : 0);
-            tbx_55_number = (tbx_55.Text != "" ? int.Parse(tbx_55.Text) : 0);
-            tbx_56_number = (tbx_56.Text != "" ? int.Parse(tbx_56.Text) : 0);
-            tbx_57_number = (tbx_57.Text != "" ? int.Parse(tbx_57.Text) : 0);
-            tbx_58_number = (tbx_58.Text != "" ? int.Parse(tbx_58.Text) : 0);
-            tbx_59_number = (tbx_59.Text != "" ? int.Parse(tbx_59.Text) : 0);
-            tbx_60_number = (tbx_60.Text != "" ? int.Parse(tbx_60.Text) : 0);
-            tbx_61_number = (tbx_61.Text != "" ? int.Parse(tbx_61.Text) : 0);
-            tbx_62_number = (tbx_62.Text != "" ? int.Parse(tbx_62.Text) : 0);
-            tbx_63_number = (tbx_63.Text != "" ? int.Parse(tbx_63.Text) : 0);
-            tbx_64_number = (tbx_64.Text != "" ? int.Parse(tbx_64.Text) : 0);
-            tbx_65_number = (tbx_65.Text != "" ? int.Parse(tbx_65.Text) : 0);
-            tbx_66_number = (tbx_66.Text != "" ? int.Parse(tbx_66.Text) : 0);
-            tbx_67_number = (tbx_67.Text != "" ? int.Parse(tbx_67.Text) : 0);
-            tbx_68_number = (tbx_68.Text != "" ? int.Parse(tbx_68.Text) : 0);
-            tbx_69_number = (tbx_69.Text != "" ? int.Parse(tbx_69.Text) : 0);
-            tbx_70_number = (tbx_70.Text != "" ? int.Parse(tbx_70.Text) : 0);
-            tbx_71_number = (tbx_71.Text != "" ? int.Parse(tbx_71.Text) : 0);
-            tbx_72_number = (tbx_72.Text != "" ? int.Parse(tbx_72.Text) : 0);
-            tbx_73_number = (tbx_73.Text != "" ? int.Parse(tbx_73.Text) : 0);
-            tbx_74_number = (tbx_74.Text != "" ? int.Parse(tbx_74.Text) : 0);
-            tbx_75_number = (tbx_75.Text != "" ? int.Parse(tbx_75.Text) : 0);
-            tbx_76_number = (tbx_76.Text != "" ? int.Parse(tbx_76.Text) : 0);
-            tbx_77_number = (tbx_77.Text != "" ? int.Parse(tbx_77.Text) : 0);
-            tbx_78_number = (tbx_78.Text != "" ? int.Parse(tbx_78.Text) : 0);
-            tbx_79_number = (tbx_79.Text != "" ? int.Parse(tbx_79.Text) : 0);
-            tbx_80_number = (tbx_80.Text != "" ? int.Parse(tbx_80.Text) : 0);
-            tbx_81_number = (tbx_81.Text != "" ? int.Parse(tbx_81.Text) : 0);
+            try
+            {
+                tbx_1_number = (tbx_1.Text != "" ? int.Parse(tbx_1.Text) : 0);
+                tbx_2_number = (tbx_2.Text != "" ? int.Parse(tbx_2.Text) : 0);
+                tbx_3_number = (tbx_3.Text != "" ? int.Parse(tbx_3.Text) : 0);
+                tbx_4_number = (tbx_4.Text != "" ? int.Parse(tbx_4.Text) : 0);
+                tbx_5_number = (tbx_5.Text != "" ? int.Parse(tbx_5.Text) : 0);
+                tbx_6_number = (tbx_6.Text != "" ? int.Parse(tbx_6.Text) : 0);
+                tbx_7_number = (tbx_7.Text != "" ? int.Parse(tbx_7.Text) : 0);
+                tbx_8_number = (tbx_8.Text != "" ? int.Parse(tbx_8.Text) : 0);
+                tbx_9_number = (tbx_9.Text != "" ? int.Parse(tbx_9.Text) : 0);
+                tbx_10_number = (tbx_10.Text != "" ? int.Parse(tbx_10.Text) : 0);
+                tbx_11_number = (tbx_11.Text != "" ? int.Parse(tbx_11.Text) : 0);
+                tbx_12_number = (tbx_12.Text != "" ? int.Parse(tbx_12.Text) : 0);
+                tbx_13_number = (tbx_13.Text != "" ? int.Parse(tbx_13.Text) : 0);
+                tbx_14_number = (tbx_14.Text != "" ? int.Parse(tbx_14.Text) : 0);
+                tbx_15_number = (tbx_15.Text != "" ? int.Parse(tbx_15.Text) : 0);
+                tbx_16_number = (tbx_16.Text != "" ? int.Parse(tbx_16.Text) : 0);
+                tbx_17_number = (tbx_17.Text != "" ? int.Parse(tbx_17.Text) : 0);
+                tbx_18_number = (tbx_18.Text != "" ? int.Parse(tbx_18.Text) : 0);
+                tbx_19_number = (tbx_19.Text != "" ? int.Parse(tbx_19.Text) : 0);
+                tbx_20_number = (tbx_20.Text != "" ? int.Parse(tbx_20.Text) : 0);
+                tbx_21_number = (tbx_21.Text != "" ? int.Parse(tbx_21.Text) : 0);
+                tbx_22_number = (tbx_22.Text != "" ? int.Parse(tbx_22.Text) : 0);
+                tbx_23_number = (tbx_23.Text != "" ? int.Parse(tbx_23.Text) : 0);
+                tbx_24_number = (tbx_24.Text != "" ? int.Parse(tbx_24.Text) : 0);
+                tbx_25_number = (tbx_25.Text != "" ? int.Parse(tbx_25.Text) : 0);
+                tbx_26_number = (tbx_26.Text != "" ? int.Parse(tbx_26.Text) : 0);
+                tbx_27_number = (tbx_27.Text != "" ? int.Parse(tbx_27.Text) : 0);
+                tbx_28_number = (tbx_28.Text != "" ? int.Parse(tbx_28.Text) : 0);
+                tbx_29_number = (tbx_29.Text != "" ? int.Parse(tbx_29.Text) : 0);
+                tbx_30_number = (tbx_30.Text != "" ? int.Parse(tbx_30.Text) : 0);
+                tbx_31_number = (tbx_31.Text != "" ? int.Parse(tbx_31.Text) : 0);
+                tbx_32_number = (tbx_32.Text != "" ? int.Parse(tbx_32.Text) : 0);
+                tbx_33_number = (tbx_33.Text != "" ? int.Parse(tbx_33.Text) : 0);
+                tbx_34_number = (tbx_34.Text != "" ? int.Parse(tbx_34.Text) : 0);
+                tbx_35_number = (tbx_35.Text != "" ? int.Parse(tbx_35.Text) : 0);
+                tbx_36_number = (tbx_36.Text != "" ? int.Parse(tbx_36.Text) : 0);
+                tbx_37_number = (tbx_37.Text != "" ? int.Parse(tbx_37.Text) : 0);
+                tbx_38_number = (tbx_38.Text != "" ? int.Parse(tbx_38.Text) : 0);
+                tbx_39_number = (tbx_39.Text != "" ? int.Parse(tbx_39.Text) : 0);
+                tbx_40_number = (tbx_40.Text != "" ? int.Parse(tbx_40.Text) : 0);
+                tbx_41_number = (tbx_41.Text != "" ? int.Parse(tbx_41.Text) : 0);
+                tbx_42_number = (tbx_42.Text != "" ? int.Parse(tbx_42.Text) : 0);
+                tbx_43_number = (tbx_43.Text != "" ? int.Parse(tbx_43.Text) : 0);
+                tbx_44_number = (tbx_44.Text != "" ? int.Parse(tbx_44.Text) : 0);
+                tbx_45_number = (tbx_45.Text != "" ? int.Parse(tbx_45.Text) : 0);
+                tbx_46_number = (tbx_46.Text != "" ? int.Parse(tbx_46.Text) : 0);
+                tbx_47_number = (tbx_47.Text != "" ? int.Parse(tbx_47.Text) : 0);
+                tbx_48_number = (tbx_48.Text != "" ? int.Parse(tbx_48.Text) : 0);
+                tbx_49_number = (tbx_49.Text != "" ? int.Parse(tbx_49.Text) : 0);
+                tbx_50_number = (tbx_50.Text != "" ? int.Parse(tbx_50.Text) : 0);
+                tbx_51_number = (tbx_51.Text != "" ? int.Parse(tbx_51.Text) : 0);
+                tbx_52_number = (tbx_52.Text != "" ? int.Parse(tbx_52.Text) : 0);
+                tbx_53_number = (tbx_53.Text != "" ? int.Parse(tbx_53.Text) : 0);
+                tbx_54_number = (tbx_54.Text != "" ? int.Parse(tbx_54.Text) : 0);
+                tbx_55_number = (tbx_55.Text != "" ? int.Parse(tbx_55.Text) : 0);
+                tbx_56_number = (tbx_56.Text != "" ? int.Parse(tbx_56.Text) : 0);
+                tbx_57_number = (tbx_57.Text != "" ? int.Parse(tbx_57.Text) : 0);
+                tbx_58_number = (tbx_58.Text != "" ? int.Parse(tbx_58.Text) : 0);
+                tbx_59_number = (tbx_59.Text != "" ? int.Parse(tbx_59.Text) : 0);
+                tbx_60_number = (tbx_60.Text != "" ? int.Parse(tbx_60.Text) : 0);
+                tbx_61_number = (tbx_61.Text != "" ? int.Parse(tbx_61.Text) : 0);
+                tbx_62_number = (tbx_62.Text != "" ? int.Parse(tbx_62.Text) : 0);
+                tbx_63_number = (tbx_63.Text != "" ? int.Parse(tbx_63.Text) : 0);
+                tbx_64_number = (tbx_64.Text != "" ? int.Parse(tbx_64.Text) : 0);
+                tbx_65_number = (tbx_65.Text != "" ? int.Parse(tbx_65.Text) : 0);
+                tbx_66_number = (tbx_66.Text != "" ? int.Parse(tbx_66.Text) : 0);
+                tbx_67_number = (tbx_67.Text != "" ? int.Parse(tbx_67.Text) : 0);
+                tbx_68_number = (tbx_68.Text != "" ? int.Parse(tbx_68.Text) : 0);
+                tbx_69_number = (tbx_69.Text != "" ? int.Parse(tbx_69.Text) : 0);
+                tbx_70_number = (tbx_70.Text != "" ? int.Parse(tbx_70.Text) : 0);
+                tbx_71_number = (tbx_71.Text != "" ? int.Parse(tbx_71.Text) : 0);
+                tbx_72_number = (tbx_72.Text != "" ? int.Parse(tbx_72.Text) : 0);
+                tbx_73_number = (tbx_73.Text != "" ? int.Parse(tbx_73.Text) : 0);
+                tbx_74_number = (tbx_74.Text != "" ? int.Parse(tbx_74.Text) : 0);
+                tbx_75_number = (tbx_75.Text != "" ? int.Parse(tbx_75.Text) : 0);
+                tbx_76_number = (tbx_76.Text != "" ? int.Parse(tbx_76.Text) : 0);
+                tbx_77_number = (tbx_77.Text != "" ? int.Parse(tbx_77.Text) : 0);
+                tbx_78_number = (tbx_78.Text != "" ? int.Parse(tbx_78.Text) : 0);
+                tbx_79_number = (tbx_79.Text != "" ? int.Parse(tbx_79.Text) : 0);
+                tbx_80_number = (tbx_80.Text != "" ? int.Parse(tbx_80.Text) : 0);
+                tbx_81_number = (tbx_81.Text != "" ? int.Parse(tbx_81.Text) : 0);
+            }
+            catch (Exception ex)
+            {
+                errorHandler(ex);
+            }
         }
 
         private void set_tbx_color()
         {
-            if (tbx_1_number != 0)
-                tbx_1.ForeColor = Color.Red;
-            else
-                tbx_1.ForeColor = Color.Blue;
-
-            if (tbx_2_number != 0)
-                tbx_2.ForeColor = Color.Red;
-            else
-                tbx_2.ForeColor = Color.Blue;
-
-            if (tbx_3_number != 0)
-                tbx_3.ForeColor = Color.Red;
-            else
-                tbx_3.ForeColor = Color.Blue;
-
-            if (tbx_4_number != 0)
-                tbx_4.ForeColor = Color.Red;
-            else
-                tbx_4.ForeColor = Color.Blue;
-
-            if (tbx_5_number != 0)
-                tbx_5.ForeColor = Color.Red;
-            else
-                tbx_5.ForeColor = Color.Blue;
-
-            if (tbx_6_number != 0)
-                tbx_6.ForeColor = Color.Red;
-            else
-                tbx_6.ForeColor = Color.Blue;
-
-            if (tbx_7_number != 0)
-                tbx_7.ForeColor = Color.Red;
-            else
-                tbx_7.ForeColor = Color.Blue;
-
-            if (tbx_8_number != 0)
-                tbx_8.ForeColor = Color.Red;
-            else
-                tbx_8.ForeColor = Color.Blue;
-
-            if (tbx_9_number != 0)
-                tbx_9.ForeColor = Color.Red;
-            else
-                tbx_9.ForeColor = Color.Blue;
-
-            if (tbx_10_number != 0)
-                tbx_10.ForeColor = Color.Red;
-            else
-                tbx_10.ForeColor = Color.Blue;
-
-            if (tbx_11_number != 0)
-                tbx_11.ForeColor = Color.Red;
-            else
-                tbx_11.ForeColor = Color.Blue;
-
-            if (tbx_12_number != 0)
-                tbx_12.ForeColor = Color.Red;
-            else
-                tbx_12.ForeColor = Color.Blue;
-
-            if (tbx_13_number != 0)
-                tbx_13.ForeColor = Color.Red;
-            else
-                tbx_13.ForeColor = Color.Blue;
-
-            if (tbx_14_number != 0)
-                tbx_14.ForeColor = Color.Red;
-            else
-                tbx_14.ForeColor = Color.Blue;
-
-            if (tbx_15_number != 0)
-                tbx_15.ForeColor = Color.Red;
-            else
-                tbx_15.ForeColor = Color.Blue;
-
-            if (tbx_16_number != 0)
-                tbx_16.ForeColor = Color.Red;
-            else
-                tbx_16.ForeColor = Color.Blue;
-
-            if (tbx_17_number != 0)
-                tbx_17.ForeColor = Color.Red;
-            else
-                tbx_17.ForeColor = Color.Blue;
-
-            if (tbx_18_number != 0)
-                tbx_18.ForeColor = Color.Red;
-            else
-                tbx_18.ForeColor = Color.Blue;
-
-            if (tbx_19_number != 0)
-                tbx_19.ForeColor = Color.Red;
-            else
-                tbx_19.ForeColor = Color.Blue;
-
-            if (tbx_20_number != 0)
-                tbx_20.ForeColor = Color.Red;
-            else
-                tbx_20.ForeColor = Color.Blue;
-
-            if (tbx_21_number != 0)
-                tbx_21.ForeColor = Color.Red;
-            else
-                tbx_21.ForeColor = Color.Blue;
-
-            if (tbx_22_number != 0)
-                tbx_22.ForeColor = Color.Red;
-            else
-                tbx_22.ForeColor = Color.Blue;
-
-            if (tbx_23_number != 0)
-                tbx_23.ForeColor = Color.Red;
-            else
-                tbx_23.ForeColor = Color.Blue;
-
-            if (tbx_24_number != 0)
-                tbx_24.ForeColor = Color.Red;
-            else
-                tbx_24.ForeColor = Color.Blue;
-
-            if (tbx_25_number != 0)
-                tbx_25.ForeColor = Color.Red;
-            else
-                tbx_25.ForeColor = Color.Blue;
-
-            if (tbx_26_number != 0)
-                tbx_26.ForeColor = Color.Red;
-            else
-                tbx_26.ForeColor = Color.Blue;
-
-            if (tbx_27_number != 0)
-                tbx_27.ForeColor = Color.Red;
-            else
-                tbx_27.ForeColor = Color.Blue;
-
-            if (tbx_28_number != 0)
-                tbx_28.ForeColor = Color.Red;
-            else
-                tbx_28.ForeColor = Color.Blue;
-
-            if (tbx_29_number != 0)
-                tbx_29.ForeColor = Color.Red;
-            else
-                tbx_29.ForeColor = Color.Blue;
-
-            if (tbx_30_number != 0)
-                tbx_30.ForeColor = Color.Red;
-            else
-                tbx_30.ForeColor = Color.Blue;
-
-            if (tbx_31_number != 0)
-                tbx_31.ForeColor = Color.Red;
-            else
-                tbx_31.ForeColor = Color.Blue;
-
-            if (tbx_32_number != 0)
-                tbx_32.ForeColor = Color.Red;
-            else
-                tbx_32.ForeColor = Color.Blue;
-
-            if (tbx_33_number != 0)
-                tbx_33.ForeColor = Color.Red;
-            else
-                tbx_33.ForeColor = Color.Blue;
-
-            if (tbx_34_number != 0)
-                tbx_34.ForeColor = Color.Red;
-            else
-                tbx_34.ForeColor = Color.Blue;
-
-            if (tbx_35_number != 0)
-                tbx_35.ForeColor = Color.Red;
-            else
-                tbx_35.ForeColor = Color.Blue;
-
-            if (tbx_36_number != 0)
-                tbx_36.ForeColor = Color.Red;
-            else
-                tbx_36.ForeColor = Color.Blue;
-
-            if (tbx_37_number != 0)
-                tbx_37.ForeColor = Color.Red;
-            else
-                tbx_37.ForeColor = Color.Blue;
-
-            if (tbx_38_number != 0)
-                tbx_38.ForeColor = Color.Red;
-            else
-                tbx_38.ForeColor = Color.Blue;
-
-            if (tbx_39_number != 0)
-                tbx_39.ForeColor = Color.Red;
-            else
-                tbx_39.ForeColor = Color.Blue;
-
-            if (tbx_40_number != 0)
-                tbx_40.ForeColor = Color.Red;
-            else
-                tbx_40.ForeColor = Color.Blue;
-
-            if (tbx_41_number != 0)
-                tbx_41.ForeColor = Color.Red;
-            else
-                tbx_41.ForeColor = Color.Blue;
-
-            if (tbx_42_number != 0)
-                tbx_42.ForeColor = Color.Red;
-            else
-                tbx_42.ForeColor = Color.Blue;
-
-            if (tbx_43_number != 0)
-                tbx_43.ForeColor = Color.Red;
-            else
-                tbx_43.ForeColor = Color.Blue;
-
-            if (tbx_44_number != 0)
-                tbx_44.ForeColor = Color.Red;
-            else
-                tbx_44.ForeColor = Color.Blue;
-
-            if (tbx_45_number != 0)
-                tbx_45.ForeColor = Color.Red;
-            else
-                tbx_45.ForeColor = Color.Blue;
-
-            if (tbx_46_number != 0)
-                tbx_46.ForeColor = Color.Red;
-            else
-                tbx_46.ForeColor = Color.Blue;
-
-            if (tbx_47_number != 0)
-                tbx_47.ForeColor = Color.Red;
-            else
-                tbx_47.ForeColor = Color.Blue;
-
-            if (tbx_48_number != 0)
-                tbx_48.ForeColor = Color.Red;
-            else
-                tbx_48.ForeColor = Color.Blue;
-
-            if (tbx_49_number != 0)
-                tbx_49.ForeColor = Color.Red;
-            else
-                tbx_49.ForeColor = Color.Blue;
-
-            if (tbx_50_number != 0)
-                tbx_50.ForeColor = Color.Red;
-            else
-                tbx_50.ForeColor = Color.Blue;
-
-            if (tbx_51_number != 0)
-                tbx_51.ForeColor = Color.Red;
-            else
-                tbx_51.ForeColor = Color.Blue;
-
-            if (tbx_52_number != 0)
-                tbx_52.ForeColor = Color.Red;
-            else
-                tbx_52.ForeColor = Color.Blue;
-
-            if (tbx_53_number != 0)
-                tbx_53.ForeColor = Color.Red;
-            else
-                tbx_53.ForeColor = Color.Blue;
-
-            if (tbx_54_number != 0)
-                tbx_54.ForeColor = Color.Red;
-            else
-                tbx_54.ForeColor = Color.Blue;
-
-            if (tbx_55_number != 0)
-                tbx_55.ForeColor = Color.Red;
-            else
-                tbx_55.ForeColor = Color.Blue;
-
-            if (tbx_56_number != 0)
-                tbx_56.ForeColor = Color.Red;
-            else
-                tbx_56.ForeColor = Color.Blue;
-
-            if (tbx_57_number != 0)
-                tbx_57.ForeColor = Color.Red;
-            else
-                tbx_57.ForeColor = Color.Blue;
-
-            if (tbx_58_number != 0)
-                tbx_58.ForeColor = Color.Red;
-            else
-                tbx_58.ForeColor = Color.Blue;
-
-            if (tbx_59_number != 0)
-                tbx_59.ForeColor = Color.Red;
-            else
-                tbx_59.ForeColor = Color.Blue;
-
-            if (tbx_60_number != 0)
-                tbx_60.ForeColor = Color.Red;
-            else
-                tbx_60.ForeColor = Color.Blue;
-
-            if (tbx_61_number != 0)
-                tbx_61.ForeColor = Color.Red;
-            else
-                tbx_61.ForeColor = Color.Blue;
-
-            if (tbx_62_number != 0)
-                tbx_62.ForeColor = Color.Red;
-            else
-                tbx_62.ForeColor = Color.Blue;
-
-            if (tbx_63_number != 0)
-                tbx_63.ForeColor = Color.Red;
-            else
-                tbx_63.ForeColor = Color.Blue;
-
-            if (tbx_64_number != 0)
-                tbx_64.ForeColor = Color.Red;
-            else
-                tbx_64.ForeColor = Color.Blue;
-
-            if (tbx_65_number != 0)
-                tbx_65.ForeColor = Color.Red;
-            else
-                tbx_65.ForeColor = Color.Blue;
-
-            if (tbx_66_number != 0)
-                tbx_66.ForeColor = Color.Red;
-            else
-                tbx_66.ForeColor = Color.Blue;
-
-            if (tbx_67_number != 0)
-                tbx_67.ForeColor = Color.Red;
-            else
-                tbx_67.ForeColor = Color.Blue;
-
-            if (tbx_68_number != 0)
-                tbx_68.ForeColor = Color.Red;
-            else
-                tbx_68.ForeColor = Color.Blue;
-
-            if (tbx_69_number != 0)
-                tbx_69.ForeColor = Color.Red;
-            else
-                tbx_69.ForeColor = Color.Blue;
-
-            if (tbx_70_number != 0)
-                tbx_70.ForeColor = Color.Red;
-            else
-                tbx_70.ForeColor = Color.Blue;
-
-            if (tbx_71_number != 0)
-                tbx_71.ForeColor = Color.Red;
-            else
-                tbx_71.ForeColor = Color.Blue;
-
-            if (tbx_72_number != 0)
-                tbx_72.ForeColor = Color.Red;
-            else
-                tbx_72.ForeColor = Color.Blue;
-
-            if (tbx_73_number != 0)
-                tbx_73.ForeColor = Color.Red;
-            else
-                tbx_73.ForeColor = Color.Blue;
-
-            if (tbx_74_number != 0)
-                tbx_74.ForeColor = Color.Red;
-            else
-                tbx_74.ForeColor = Color.Blue;
-
-            if (tbx_75_number != 0)
-                tbx_75.ForeColor = Color.Red;
-            else
-                tbx_75.ForeColor = Color.Blue;
-
-            if (tbx_76_number != 0)
-                tbx_76.ForeColor = Color.Red;
-            else
-                tbx_76.ForeColor = Color.Blue;
-
-            if (tbx_77_number != 0)
-                tbx_77.ForeColor = Color.Red;
-            else
-                tbx_77.ForeColor = Color.Blue;
-
-            if (tbx_78_number != 0)
-                tbx_78.ForeColor = Color.Red;
-            else
-                tbx_78.ForeColor = Color.Blue;
-
-            if (tbx_79_number != 0)
-                tbx_79.ForeColor = Color.Red;
-            else
-                tbx_79.ForeColor = Color.Blue;
-
-            if (tbx_80_number != 0)
-                tbx_80.ForeColor = Color.Red;
-            else
-                tbx_80.ForeColor = Color.Blue;
-
-            if (tbx_81_number != 0)
-                tbx_81.ForeColor = Color.Red;
-            else
-                tbx_81.ForeColor = Color.Blue;
-
+            try
+            {
+                if (tbx_1_number != 0)
+                    tbx_1.ForeColor = Color.Red;
+                else
+                    tbx_1.ForeColor = Color.Blue;
+
+                if (tbx_2_number != 0)
+                    tbx_2.ForeColor = Color.Red;
+                else
+                    tbx_2.ForeColor = Color.Blue;
+
+                if (tbx_3_number != 0)
+                    tbx_3.ForeColor = Color.Red;
+                else
+                    tbx_3.ForeColor = Color.Blue;
+
+                if (tbx_4_number != 0)
+                    tbx_4.ForeColor = Color.Red;
+                else
+                    tbx_4.ForeColor = Color.Blue;
+
+                if (tbx_5_number != 0)
+                    tbx_5.ForeColor = Color.Red;
+                else
+                    tbx_5.ForeColor = Color.Blue;
+
+                if (tbx_6_number != 0)
+                    tbx_6.ForeColor = Color.Red;
+                else
+                    tbx_6.ForeColor = Color.Blue;
+
+                if (tbx_7_number != 0)
+                    tbx_7.ForeColor = Color.Red;
+                else
+                    tbx_7.ForeColor = Color.Blue;
+
+                if (tbx_8_number != 0)
+                    tbx_8.ForeColor = Color.Red;
+                else
+                    tbx_8.ForeColor = Color.Blue;
+
+                if (tbx_9_number != 0)
+                    tbx_9.ForeColor = Color.Red;
+                else
+                    tbx_9.ForeColor = Color.Blue;
+
+                if (tbx_10_number != 0)
+                    tbx_10.ForeColor = Color.Red;
+                else
+                    tbx_10.ForeColor = Color.Blue;
+
+                if (tbx_11_number != 0)
+                    tbx_11.ForeColor = Color.Red;
+                else
+                    tbx_11.ForeColor = Color.Blue;
+
+                if (tbx_12_number != 0)
+                    tbx_12.ForeColor = Color.Red;
+                else
+                    tbx_12.ForeColor = Color.Blue;
+
+                if (tbx_13_number != 0)
+                    tbx_13.ForeColor = Color.Red;
+                else
+                    tbx_13.ForeColor = Color.Blue;
+
+                if (tbx_14_number != 0)
+                    tbx_14.ForeColor = Color.Red;
+                else
+                    tbx_14.ForeColor = Color.Blue;
+
+                if (tbx_15_number != 0)
+                    tbx_15.ForeColor = Color.Red;
+                else
+                    tbx_15.ForeColor = Color.Blue;
+
+                if (tbx_16_number != 0)
+                    tbx_16.ForeColor = Color.Red;
+                else
+                    tbx_16.ForeColor = Color.Blue;
+
+                if (tbx_17_number != 0)
+                    tbx_17.ForeColor = Color.Red;
+                else
+                    tbx_17.ForeColor = Color.Blue;
+
+                if (tbx_18_number != 0)
+                    tbx_18.ForeColor = Color.Red;
+                else
+                    tbx_18.ForeColor = Color.Blue;
+
+                if (tbx_19_number != 0)
+                    tbx_19.ForeColor = Color.Red;
+                else
+                    tbx_19.ForeColor = Color.Blue;
+
+                if (tbx_20_number != 0)
+                    tbx_20.ForeColor = Color.Red;
+                else
+                    tbx_20.ForeColor = Color.Blue;
+
+                if (tbx_21_number != 0)
+                    tbx_21.ForeColor = Color.Red;
+                else
+                    tbx_21.ForeColor = Color.Blue;
+
+                if (tbx_22_number != 0)
+                    tbx_22.ForeColor = Color.Red;
+                else
+                    tbx_22.ForeColor = Color.Blue;
+
+                if (tbx_23_number != 0)
+                    tbx_23.ForeColor = Color.Red;
+                else
+                    tbx_23.ForeColor = Color.Blue;
+
+                if (tbx_24_number != 0)
+                    tbx_24.ForeColor = Color.Red;
+                else
+                    tbx_24.ForeColor = Color.Blue;
+
+                if (tbx_25_number != 0)
+                    tbx_25.ForeColor = Color.Red;
+                else
+                    tbx_25.ForeColor = Color.Blue;
+
+                if (tbx_26_number != 0)
+                    tbx_26.ForeColor = Color.Red;
+                else
+                    tbx_26.ForeColor = Color.Blue;
+
+                if (tbx_27_number != 0)
+                    tbx_27.ForeColor = Color.Red;
+                else
+                    tbx_27.ForeColor = Color.Blue;
+
+                if (tbx_28_number != 0)
+                    tbx_28.ForeColor = Color.Red;
+                else
+                    tbx_28.ForeColor = Color.Blue;
+
+                if (tbx_29_number != 0)
+                    tbx_29.ForeColor = Color.Red;
+                else
+                    tbx_29.ForeColor = Color.Blue;
+
+                if (tbx_30_number != 0)
+                    tbx_30.ForeColor = Color.Red;
+                else
+                    tbx_30.ForeColor = Color.Blue;
+
+                if (tbx_31_number != 0)
+                    tbx_31.ForeColor = Color.Red;
+                else
+                    tbx_31.ForeColor = Color.Blue;
+
+                if (tbx_32_number != 0)
+                    tbx_32.ForeColor = Color.Red;
+                else
+                    tbx_32.ForeColor = Color.Blue;
+
+                if (tbx_33_number != 0)
+                    tbx_33.ForeColor = Color.Red;
+                else
+                    tbx_33.ForeColor = Color.Blue;
+
+                if (tbx_34_number != 0)
+                    tbx_34.ForeColor = Color.Red;
+                else
+                    tbx_34.ForeColor = Color.Blue;
+
+                if (tbx_35_number != 0)
+                    tbx_35.ForeColor = Color.Red;
+                else
+                    tbx_35.ForeColor = Color.Blue;
+
+                if (tbx_36_number != 0)
+                    tbx_36.ForeColor = Color.Red;
+                else
+                    tbx_36.ForeColor = Color.Blue;
+
+                if (tbx_37_number != 0)
+                    tbx_37.ForeColor = Color.Red;
+                else
+                    tbx_37.ForeColor = Color.Blue;
+
+                if (tbx_38_number != 0)
+                    tbx_38.ForeColor = Color.Red;
+                else
+                    tbx_38.ForeColor = Color.Blue;
+
+                if (tbx_39_number != 0)
+                    tbx_39.ForeColor = Color.Red;
+                else
+                    tbx_39.ForeColor = Color.Blue;
+
+                if (tbx_40_number != 0)
+                    tbx_40.ForeColor = Color.Red;
+                else
+                    tbx_40.ForeColor = Color.Blue;
+
+                if (tbx_41_number != 0)
+                    tbx_41.ForeColor = Color.Red;
+                else
+                    tbx_41.ForeColor = Color.Blue;
+
+                if (tbx_42_number != 0)
+                    tbx_42.ForeColor = Color.Red;
+                else
+                    tbx_42.ForeColor = Color.Blue;
+
+                if (tbx_43_number != 0)
+                    tbx_43.ForeColor = Color.Red;
+                else
+                    tbx_43.ForeColor = Color.Blue;
+
+                if (tbx_44_number != 0)
+                    tbx_44.ForeColor = Color.Red;
+                else
+                    tbx_44.ForeColor = Color.Blue;
+
+                if (tbx_45_number != 0)
+                    tbx_45.ForeColor = Color.Red;
+                else
+                    tbx_45.ForeColor = Color.Blue;
+
+                if (tbx_46_number != 0)
+                    tbx_46.ForeColor = Color.Red;
+                else
+                    tbx_46.ForeColor = Color.Blue;
+
+                if (tbx_47_number != 0)
+                    tbx_47.ForeColor = Color.Red;
+                else
+                    tbx_47.ForeColor = Color.Blue;
+
+                if (tbx_48_number != 0)
+                    tbx_48.ForeColor = Color.Red;
+                else
+                    tbx_48.ForeColor = Color.Blue;
+
+                if (tbx_49_number != 0)
+                    tbx_49.ForeColor = Color.Red;
+                else
+                    tbx_49.ForeColor = Color.Blue;
+
+                if (tbx_50_number != 0)
+                    tbx_50.ForeColor = Color.Red;
+                else
+                    tbx_50.ForeColor = Color.Blue;
+
+                if (tbx_51_number != 0)
+                    tbx_51.ForeColor = Color.Red;
+                else
+                    tbx_51.ForeColor = Color.Blue;
+
+                if (tbx_52_number != 0)
+                    tbx_52.ForeColor = Color.Red;
+                else
+                    tbx_52.ForeColor = Color.Blue;
+
+                if (tbx_53_number != 0)
+                    tbx_53.ForeColor = Color.Red;
+                else
+                    tbx_53.ForeColor = Color.Blue;
+
+                if (tbx_54_number != 0)
+                    tbx_54.ForeColor = Color.Red;
+                else
+                    tbx_54.ForeColor = Color.Blue;
+
+                if (tbx_55_number != 0)
+                    tbx_55.ForeColor = Color.Red;
+                else
+                    tbx_55.ForeColor = Color.Blue;
+
+                if (tbx_56_number != 0)
+                    tbx_56.ForeColor = Color.Red;
+                else
+                    tbx_56.ForeColor = Color.Blue;
+
+                if (tbx_57_number != 0)
+                    tbx_57.ForeColor = Color.Red;
+                else
+                    tbx_57.ForeColor = Color.Blue;
+
+                if (tbx_58_number != 0)
+                    tbx_58.ForeColor = Color.Red;
+                else
+                    tbx_58.ForeColor = Color.Blue;
+
+                if (tbx_59_number != 0)
+                    tbx_59.ForeColor = Color.Red;
+                else
+                    tbx_59.ForeColor = Color.Blue;
+
+                if (tbx_60_number != 0)
+                    tbx_60.ForeColor = Color.Red;
+                else
+                    tbx_60.ForeColor = Color.Blue;
+
+                if (tbx_61_number != 0)
+                    tbx_61.ForeColor = Color.Red;
+                else
+                    tbx_61.ForeColor = Color.Blue;
+
+                if (tbx_62_number != 0)
+                    tbx_62.ForeColor = Color.Red;
+                else
+                    tbx_62.ForeColor = Color.Blue;
+
+                if (tbx_63_number != 0)
+                    tbx_63.ForeColor = Color.Red;
+                else
+                    tbx_63.ForeColor = Color.Blue;
+
+                if (tbx_64_number != 0)
+                    tbx_64.ForeColor = Color.Red;
+                else
+                    tbx_64.ForeColor = Color.Blue;
+
+                if (tbx_65_number != 0)
+                    tbx_65.ForeColor = Color.Red;
+                else
+                    tbx_65.ForeColor = Color.Blue;
+
+                if (tbx_66_number != 0)
+                    tbx_66.ForeColor = Color.Red;
+                else
+                    tbx_66.ForeColor = Color.Blue;
+
+                if (tbx_67_number != 0)
+                    tbx_67.ForeColor = Color.Red;
+                else
+                    tbx_67.ForeColor = Color.Blue;
+
+                if (tbx_68_number != 0)
+                    tbx_68.ForeColor = Color.Red;
+                else
+                    tbx_68.ForeColor = Color.Blue;
+
+                if (tbx_69_number != 0)
+                    tbx_69.ForeColor = Color.Red;
+                else
+                    tbx_69.ForeColor = Color.Blue;
+
+                if (tbx_70_number != 0)
+                    tbx_70.ForeColor = Color.Red;
+                else
+                    tbx_70.ForeColor = Color.Blue;
+
+                if (tbx_71_number != 0)
+                    tbx_71.ForeColor = Color.Red;
+                else
+                    tbx_71.ForeColor = Color.Blue;
+
+                if (tbx_72_number != 0)
+                    tbx_72.ForeColor = Color.Red;
+                else
+                    tbx_72.ForeColor = Color.Blue;
+
+                if (tbx_73_number != 0)
+                    tbx_73.ForeColor = Color.Red;
+                else
+                    tbx_73.ForeColor = Color.Blue;
+
+                if (tbx_74_number != 0)
+                    tbx_74.ForeColor = Color.Red;
+                else
+                    tbx_74.ForeColor = Color.Blue;
+
+                if (tbx_75_number != 0)
+                    tbx_75.ForeColor = Color.Red;
+                else
+                    tbx_75.ForeColor = Color.Blue;
+
+                if (tbx_76_number != 0)
+                    tbx_76.ForeColor = Color.Red;
+                else
+                    tbx_76.ForeColor = Color.Blue;
+
+                if (tbx_77_number != 0)
+                    tbx_77.ForeColor = Color.Red;
+                else
+                    tbx_77.ForeColor = Color.Blue;
+
+                if (tbx_78_number != 0)
+                    tbx_78.ForeColor = Color.Red;
+                else
+                    tbx_78.ForeColor = Color.Blue;
+
+                if (tbx_79_number != 0)
+                    tbx_79.ForeColor = Color.Red;
+                else
+                    tbx_79.ForeColor = Color.Blue;
+
+                if (tbx_80_number != 0)
+                    tbx_80.ForeColor = Color.Red;
+                else
+                    tbx_80.ForeColor = Color.Blue;
+
+                if (tbx_81_number != 0)
+                    tbx_81.ForeColor = Color.Red;
+                else
+                    tbx_81.ForeColor = Color.Blue;
+
+            }
+            catch (Exception ex)
+            {
+                errorHandler(ex);
+            }
         }
 
         private void btn_reset_Click(object sender, EventArgs e)
         {
             try
             {
+                pbx_loading.Visible = true;
                 resetCtor();
                 resetLoad();
                 btn_solve.Enabled = true;
@@ -2262,6 +2293,8 @@ namespace SudokuSolver
                 tbx_79.ForeColor = Color.Black;
                 tbx_80.ForeColor = Color.Black;
                 tbx_81.ForeColor = Color.Black;
+
+                pbx_loading.Visible = false;
             }
             catch (Exception ex)
             {
@@ -3974,6 +4007,101 @@ namespace SudokuSolver
 
         #endregion
 
-        
+        private int[] serializeGrid()
+        {
+            try
+            {
+                int[] grid = new int[81];
+                grid[0] = tbx_1_number;
+                grid[1] = tbx_2_number;
+                grid[2] = tbx_3_number;
+                grid[3] = tbx_4_number;
+                grid[4] = tbx_5_number;
+                grid[5] = tbx_6_number;
+                grid[6] = tbx_7_number;
+                grid[7] = tbx_8_number;
+                grid[8] = tbx_9_number;
+                grid[9] = tbx_10_number;
+                grid[10] = tbx_11_number;
+                grid[11] = tbx_12_number;
+                grid[12] = tbx_13_number;
+                grid[13] = tbx_14_number;
+                grid[14] = tbx_15_number;
+                grid[15] = tbx_16_number;
+                grid[16] = tbx_17_number;
+                grid[17] = tbx_18_number;
+                grid[18] = tbx_19_number;
+                grid[19] = tbx_20_number;
+                grid[20] = tbx_21_number;
+                grid[21] = tbx_22_number;
+                grid[22] = tbx_23_number;
+                grid[23] = tbx_24_number;
+                grid[24] = tbx_25_number;
+                grid[25] = tbx_26_number;
+                grid[26] = tbx_27_number;
+                grid[27] = tbx_28_number;
+                grid[28] = tbx_29_number;
+                grid[29] = tbx_30_number;
+                grid[30] = tbx_31_number;
+                grid[31] = tbx_32_number;
+                grid[32] = tbx_33_number;
+                grid[33] = tbx_34_number;
+                grid[34] = tbx_35_number;
+                grid[35] = tbx_36_number;
+                grid[36] = tbx_37_number;
+                grid[37] = tbx_38_number;
+                grid[38] = tbx_39_number;
+                grid[39] = tbx_40_number;
+                grid[40] = tbx_41_number;
+                grid[41] = tbx_42_number;
+                grid[42] = tbx_43_number;
+                grid[43] = tbx_44_number;
+                grid[44] = tbx_45_number;
+                grid[45] = tbx_46_number;
+                grid[46] = tbx_47_number;
+                grid[47] = tbx_48_number;
+                grid[48] = tbx_49_number;
+                grid[49] = tbx_50_number;
+                grid[50] = tbx_51_number;
+                grid[51] = tbx_52_number;
+                grid[52] = tbx_53_number;
+                grid[53] = tbx_54_number;
+                grid[54] = tbx_55_number;
+                grid[55] = tbx_56_number;
+                grid[56] = tbx_57_number;
+                grid[57] = tbx_58_number;
+                grid[58] = tbx_59_number;
+                grid[59] = tbx_60_number;
+                grid[60] = tbx_61_number;
+                grid[61] = tbx_62_number;
+                grid[62] = tbx_63_number;
+                grid[63] = tbx_64_number;
+                grid[64] = tbx_65_number;
+                grid[65] = tbx_66_number;
+                grid[66] = tbx_67_number;
+                grid[67] = tbx_68_number;
+                grid[68] = tbx_69_number;
+                grid[69] = tbx_70_number;
+                grid[70] = tbx_71_number;
+                grid[71] = tbx_72_number;
+                grid[72] = tbx_73_number;
+                grid[73] = tbx_74_number;
+                grid[74] = tbx_75_number;
+                grid[75] = tbx_76_number;
+                grid[76] = tbx_77_number;
+                grid[77] = tbx_78_number;
+                grid[78] = tbx_79_number;
+                grid[79] = tbx_80_number;
+                grid[80] = tbx_81_number;
+
+                return grid;
+            }
+            catch (Exception ex)
+            {
+                errorHandler(ex);
+                return null;
+            }
+        }
+
     }
 }

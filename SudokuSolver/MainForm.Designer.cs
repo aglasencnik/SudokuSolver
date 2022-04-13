@@ -121,7 +121,9 @@
             this.lbl_currentPage = new System.Windows.Forms.Label();
             this.lbl_labelResultPage = new System.Windows.Forms.Label();
             this.btn_reset = new System.Windows.Forms.Button();
+            this.pbx_loading = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_grid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbx_loading)).BeginInit();
             this.SuspendLayout();
             // 
             // pbx_grid
@@ -1384,12 +1386,23 @@
             this.btn_reset.UseVisualStyleBackColor = false;
             this.btn_reset.Click += new System.EventHandler(this.btn_reset_Click);
             // 
+            // pbx_loading
+            // 
+            this.pbx_loading.Image = global::SudokuSolver.Properties.Resources.loading_buffering;
+            this.pbx_loading.Location = new System.Drawing.Point(569, 52);
+            this.pbx_loading.Name = "pbx_loading";
+            this.pbx_loading.Size = new System.Drawing.Size(208, 154);
+            this.pbx_loading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbx_loading.TabIndex = 93;
+            this.pbx_loading.TabStop = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.pbx_loading);
             this.Controls.Add(this.btn_reset);
             this.Controls.Add(this.lbl_labelResultPage);
             this.Controls.Add(this.lbl_currentPage);
@@ -1490,6 +1503,7 @@
             this.Text = "Sudoku Solver";
             this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbx_grid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbx_loading)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1589,5 +1603,6 @@
         private Label lbl_currentPage;
         private Label lbl_labelResultPage;
         private Button btn_reset;
+        private PictureBox pbx_loading;
     }
 }
