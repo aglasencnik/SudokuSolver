@@ -1307,6 +1307,7 @@
             this.btn_previous.TabIndex = 85;
             this.btn_previous.Text = "<";
             this.btn_previous.UseVisualStyleBackColor = false;
+            this.btn_previous.Click += new System.EventHandler(this.btn_previous_Click);
             // 
             // btn_next
             // 
@@ -1319,6 +1320,7 @@
             this.btn_next.TabIndex = 86;
             this.btn_next.Text = ">";
             this.btn_next.UseVisualStyleBackColor = false;
+            this.btn_next.Click += new System.EventHandler(this.btn_next_Click);
             // 
             // lbl_version
             // 
@@ -1389,7 +1391,7 @@
             // pbx_loading
             // 
             this.pbx_loading.Image = global::SudokuSolver.Properties.Resources.loading_buffering;
-            this.pbx_loading.Location = new System.Drawing.Point(569, 52);
+            this.pbx_loading.Location = new System.Drawing.Point(572, 50);
             this.pbx_loading.Name = "pbx_loading";
             this.pbx_loading.Size = new System.Drawing.Size(208, 154);
             this.pbx_loading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;

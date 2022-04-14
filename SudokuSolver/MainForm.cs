@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 
 namespace SudokuSolver
 {
@@ -171,7 +172,9 @@ namespace SudokuSolver
         private int tbx_80_number;
         private int tbx_81_number;
 
-        ArrayList resultList;
+        private sudokuGrid[] sudokuGrids;
+        private int numberOfResults;
+        private int currentResultIndex;
 
         #endregion
 
@@ -194,6 +197,8 @@ namespace SudokuSolver
             try
             {
                 numOfInputs = 0;
+                numberOfResults = 0;
+                currentResultIndex = 0;
                 tbx_1_used = false;
                 tbx_2_used = false;
                 tbx_3_used = false;
@@ -1419,11 +1424,30 @@ namespace SudokuSolver
                 if (numOfInputs >= 10)
                 {
                     pbx_loading.Visible = true;
-                    disable_tbx();
                     get_tbx_variables();
-                    set_tbx_color();
-                    sudokuSolver solver = new sudokuSolver(serializeGrid());
-                    solver.solve();
+
+                    if (checkIfReal())
+                    {
+                        btn_solve.Enabled = false;
+                        disable_tbx();
+                        set_tbx_color();
+                        sudokuSolver solver = new sudokuSolver(serializeGrid());
+                        sudokuGrids = solver.solve();
+                        btn_next.Visible = true;
+                        btn_previous.Visible = true;
+                        lbl_currentPage.Visible = true;
+                        lbl_numOfResults.Visible = true;
+                        lbl_numText.Visible = true;
+                        lbl_labelResultPage.Visible = true;
+                        numberOfResults = sudokuGrids.Length;
+                        lbl_numOfResults.Text = (numberOfResults >= 1 ? ""+numberOfResults : "0");
+                        lbl_currentPage.Text = "" + currentResultIndex;
+                        btn_next.Visible = (numberOfResults >= 2 ? true : false);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Sudoku entered is not real!", "Sudoku not real!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                     pbx_loading.Visible = false;
                 }
                 else
@@ -2042,8 +2066,6 @@ namespace SudokuSolver
             try
             {
                 pbx_loading.Visible = true;
-                resetCtor();
-                resetLoad();
                 btn_solve.Enabled = true;
                 lbl_numOfResults.Text = "";
                 lbl_currentPage.Text = "";
@@ -2293,6 +2315,9 @@ namespace SudokuSolver
                 tbx_79.ForeColor = Color.Black;
                 tbx_80.ForeColor = Color.Black;
                 tbx_81.ForeColor = Color.Black;
+
+                resetCtor();
+                resetLoad();
 
                 pbx_loading.Visible = false;
             }
@@ -4007,93 +4032,92 @@ namespace SudokuSolver
 
         #endregion
 
-        private int[] serializeGrid()
+        private sudokuGrid serializeGrid()
         {
             try
             {
-                int[] grid = new int[81];
-                grid[0] = tbx_1_number;
-                grid[1] = tbx_2_number;
-                grid[2] = tbx_3_number;
-                grid[3] = tbx_4_number;
-                grid[4] = tbx_5_number;
-                grid[5] = tbx_6_number;
-                grid[6] = tbx_7_number;
-                grid[7] = tbx_8_number;
-                grid[8] = tbx_9_number;
-                grid[9] = tbx_10_number;
-                grid[10] = tbx_11_number;
-                grid[11] = tbx_12_number;
-                grid[12] = tbx_13_number;
-                grid[13] = tbx_14_number;
-                grid[14] = tbx_15_number;
-                grid[15] = tbx_16_number;
-                grid[16] = tbx_17_number;
-                grid[17] = tbx_18_number;
-                grid[18] = tbx_19_number;
-                grid[19] = tbx_20_number;
-                grid[20] = tbx_21_number;
-                grid[21] = tbx_22_number;
-                grid[22] = tbx_23_number;
-                grid[23] = tbx_24_number;
-                grid[24] = tbx_25_number;
-                grid[25] = tbx_26_number;
-                grid[26] = tbx_27_number;
-                grid[27] = tbx_28_number;
-                grid[28] = tbx_29_number;
-                grid[29] = tbx_30_number;
-                grid[30] = tbx_31_number;
-                grid[31] = tbx_32_number;
-                grid[32] = tbx_33_number;
-                grid[33] = tbx_34_number;
-                grid[34] = tbx_35_number;
-                grid[35] = tbx_36_number;
-                grid[36] = tbx_37_number;
-                grid[37] = tbx_38_number;
-                grid[38] = tbx_39_number;
-                grid[39] = tbx_40_number;
-                grid[40] = tbx_41_number;
-                grid[41] = tbx_42_number;
-                grid[42] = tbx_43_number;
-                grid[43] = tbx_44_number;
-                grid[44] = tbx_45_number;
-                grid[45] = tbx_46_number;
-                grid[46] = tbx_47_number;
-                grid[47] = tbx_48_number;
-                grid[48] = tbx_49_number;
-                grid[49] = tbx_50_number;
-                grid[50] = tbx_51_number;
-                grid[51] = tbx_52_number;
-                grid[52] = tbx_53_number;
-                grid[53] = tbx_54_number;
-                grid[54] = tbx_55_number;
-                grid[55] = tbx_56_number;
-                grid[56] = tbx_57_number;
-                grid[57] = tbx_58_number;
-                grid[58] = tbx_59_number;
-                grid[59] = tbx_60_number;
-                grid[60] = tbx_61_number;
-                grid[61] = tbx_62_number;
-                grid[62] = tbx_63_number;
-                grid[63] = tbx_64_number;
-                grid[64] = tbx_65_number;
-                grid[65] = tbx_66_number;
-                grid[66] = tbx_67_number;
-                grid[67] = tbx_68_number;
-                grid[68] = tbx_69_number;
-                grid[69] = tbx_70_number;
-                grid[70] = tbx_71_number;
-                grid[71] = tbx_72_number;
-                grid[72] = tbx_73_number;
-                grid[73] = tbx_74_number;
-                grid[74] = tbx_75_number;
-                grid[75] = tbx_76_number;
-                grid[76] = tbx_77_number;
-                grid[77] = tbx_78_number;
-                grid[78] = tbx_79_number;
-                grid[79] = tbx_80_number;
-                grid[80] = tbx_81_number;
-
+                sudokuGrid grid = new sudokuGrid();
+                grid.square_1 = tbx_1_number;
+                grid.square_2 = tbx_2_number;
+                grid.square_3 = tbx_3_number;
+                grid.square_4 = tbx_4_number;
+                grid.square_5 = tbx_5_number;
+                grid.square_6 = tbx_6_number;
+                grid.square_7 = tbx_7_number;
+                grid.square_8 = tbx_8_number;
+                grid.square_9 = tbx_9_number;
+                grid.square_10 = tbx_10_number;
+                grid.square_11 = tbx_11_number;
+                grid.square_12 = tbx_12_number;
+                grid.square_13 = tbx_13_number;
+                grid.square_14 = tbx_14_number;
+                grid.square_15 = tbx_15_number;
+                grid.square_16 = tbx_16_number;
+                grid.square_17 = tbx_17_number;
+                grid.square_18 = tbx_18_number;
+                grid.square_19 = tbx_19_number;
+                grid.square_20 = tbx_20_number;
+                grid.square_21 = tbx_21_number;
+                grid.square_22 = tbx_22_number;
+                grid.square_23 = tbx_23_number;
+                grid.square_24 = tbx_24_number;
+                grid.square_25 = tbx_25_number;
+                grid.square_26 = tbx_26_number;
+                grid.square_27 = tbx_27_number;
+                grid.square_28 = tbx_28_number;
+                grid.square_29 = tbx_29_number;
+                grid.square_30 = tbx_30_number;
+                grid.square_31 = tbx_31_number;
+                grid.square_32 = tbx_32_number;
+                grid.square_33 = tbx_33_number;
+                grid.square_34 = tbx_34_number;
+                grid.square_35 = tbx_35_number;
+                grid.square_36 = tbx_36_number;
+                grid.square_37 = tbx_37_number;
+                grid.square_38 = tbx_38_number;
+                grid.square_39 = tbx_39_number;
+                grid.square_40 = tbx_40_number;
+                grid.square_41 = tbx_41_number;
+                grid.square_42 = tbx_42_number;
+                grid.square_43 = tbx_43_number;
+                grid.square_44 = tbx_44_number;
+                grid.square_45 = tbx_45_number;
+                grid.square_46 = tbx_46_number;
+                grid.square_47 = tbx_47_number;
+                grid.square_48 = tbx_48_number;
+                grid.square_49 = tbx_49_number;
+                grid.square_50 = tbx_50_number;
+                grid.square_51 = tbx_51_number;
+                grid.square_52 = tbx_52_number;
+                grid.square_53 = tbx_53_number;
+                grid.square_54 = tbx_54_number;
+                grid.square_55 = tbx_55_number;
+                grid.square_56 = tbx_56_number;
+                grid.square_57 = tbx_57_number;
+                grid.square_58 = tbx_58_number;
+                grid.square_59 = tbx_59_number;
+                grid.square_60 = tbx_60_number;
+                grid.square_61 = tbx_61_number;
+                grid.square_62 = tbx_62_number;
+                grid.square_63 = tbx_63_number;
+                grid.square_64 = tbx_64_number;
+                grid.square_65 = tbx_65_number;
+                grid.square_66 = tbx_66_number;
+                grid.square_67 = tbx_67_number;
+                grid.square_68 = tbx_68_number;
+                grid.square_69 = tbx_69_number;
+                grid.square_70 = tbx_70_number;
+                grid.square_71 = tbx_71_number;
+                grid.square_72 = tbx_72_number;
+                grid.square_73 = tbx_73_number;
+                grid.square_74 = tbx_74_number;
+                grid.square_75 = tbx_75_number;
+                grid.square_76 = tbx_76_number;
+                grid.square_77 = tbx_77_number;
+                grid.square_78 = tbx_78_number;
+                grid.square_79 = tbx_79_number;
+                grid.square_80 = tbx_80_number;
+                grid.square_81 = tbx_81_number;
                 return grid;
             }
             catch (Exception ex)
@@ -4103,5 +4127,1151 @@ namespace SudokuSolver
             }
         }
 
+        private bool checkIfReal()
+        {
+            try
+            {
+                if (check_square() == true && check_vertical() == true && check_horizontal() == true)
+                    return true;
+                else
+                    return false;
+            }
+            catch (Exception ex)
+            {
+                errorHandler(ex);
+                return false;
+            }
+        }
+
+        private bool check_square()
+        {
+            try
+            {
+                #region variables
+                int square_1_1 = 0;
+                int square_1_2 = 0;
+                int square_1_3 = 0;
+                int square_1_4 = 0;
+                int square_1_5 = 0;
+                int square_1_6 = 0;
+                int square_1_7 = 0;
+                int square_1_8 = 0;
+                int square_1_9 = 0;
+                int square_2_1 = 0;
+                int square_2_2 = 0;
+                int square_2_3 = 0;
+                int square_2_4 = 0;
+                int square_2_5 = 0;
+                int square_2_6 = 0;
+                int square_2_7 = 0;
+                int square_2_8 = 0;
+                int square_2_9 = 0;
+                int square_3_1 = 0;
+                int square_3_2 = 0;
+                int square_3_3 = 0;
+                int square_3_4 = 0;
+                int square_3_5 = 0;
+                int square_3_6 = 0;
+                int square_3_7 = 0;
+                int square_3_8 = 0;
+                int square_3_9 = 0;
+                int square_4_1 = 0;
+                int square_4_2 = 0;
+                int square_4_3 = 0;
+                int square_4_4 = 0;
+                int square_4_5 = 0;
+                int square_4_6 = 0;
+                int square_4_7 = 0;
+                int square_4_8 = 0;
+                int square_4_9 = 0;
+                int square_5_1 = 0;
+                int square_5_2 = 0;
+                int square_5_3 = 0;
+                int square_5_4 = 0;
+                int square_5_5 = 0;
+                int square_5_6 = 0;
+                int square_5_7 = 0;
+                int square_5_8 = 0;
+                int square_5_9 = 0;
+                int square_6_1 = 0;
+                int square_6_2 = 0;
+                int square_6_3 = 0;
+                int square_6_4 = 0;
+                int square_6_5 = 0;
+                int square_6_6 = 0;
+                int square_6_7 = 0;
+                int square_6_8 = 0;
+                int square_6_9 = 0;
+                int square_7_1 = 0;
+                int square_7_2 = 0;
+                int square_7_3 = 0;
+                int square_7_4 = 0;
+                int square_7_5 = 0;
+                int square_7_6 = 0;
+                int square_7_7 = 0;
+                int square_7_8 = 0;
+                int square_7_9 = 0;
+                int square_8_1 = 0;
+                int square_8_2 = 0;
+                int square_8_3 = 0;
+                int square_8_4 = 0;
+                int square_8_5 = 0;
+                int square_8_6 = 0;
+                int square_8_7 = 0;
+                int square_8_8 = 0;
+                int square_8_9 = 0;
+                int square_9_1 = 0;
+                int square_9_2 = 0;
+                int square_9_3 = 0;
+                int square_9_4 = 0;
+                int square_9_5 = 0;
+                int square_9_6 = 0;
+                int square_9_7 = 0;
+                int square_9_8 = 0;
+                int square_9_9 = 0;
+                #endregion
+
+                List<int> square_1 = new List<int>();
+                List<int> square_2 = new List<int>();
+                List<int> square_3 = new List<int>();
+                List<int> square_4 = new List<int>();
+                List<int> square_5 = new List<int>();
+                List<int> square_6 = new List<int>();
+                List<int> square_7 = new List<int>();
+                List<int> square_8 = new List<int>();
+                List<int> square_9 = new List<int>();
+
+                square_1.Add(tbx_1_number);
+                square_1.Add(tbx_2_number);
+                square_1.Add(tbx_3_number);
+                square_1.Add(tbx_10_number);
+                square_1.Add(tbx_11_number);
+                square_1.Add(tbx_12_number);
+                square_1.Add(tbx_19_number);
+                square_1.Add(tbx_20_number);
+                square_1.Add(tbx_21_number);
+
+                square_2.Add(tbx_4_number);
+                square_2.Add(tbx_5_number);
+                square_2.Add(tbx_6_number);
+                square_2.Add(tbx_13_number);
+                square_2.Add(tbx_14_number);
+                square_2.Add(tbx_15_number);
+                square_2.Add(tbx_22_number);
+                square_2.Add(tbx_23_number);
+                square_2.Add(tbx_24_number);
+
+                square_3.Add(tbx_7_number);
+                square_3.Add(tbx_8_number);
+                square_3.Add(tbx_9_number);
+                square_3.Add(tbx_16_number);
+                square_3.Add(tbx_17_number);
+                square_3.Add(tbx_18_number);
+                square_3.Add(tbx_25_number);
+                square_3.Add(tbx_26_number);
+                square_3.Add(tbx_27_number);
+
+                square_4.Add(tbx_28_number);
+                square_4.Add(tbx_29_number);
+                square_4.Add(tbx_30_number);
+                square_4.Add(tbx_37_number);
+                square_4.Add(tbx_38_number);
+                square_4.Add(tbx_39_number);
+                square_4.Add(tbx_46_number);
+                square_4.Add(tbx_47_number);
+                square_4.Add(tbx_48_number);
+
+                square_5.Add(tbx_31_number);
+                square_5.Add(tbx_32_number);
+                square_5.Add(tbx_33_number);
+                square_5.Add(tbx_40_number);
+                square_5.Add(tbx_41_number);
+                square_5.Add(tbx_42_number);
+                square_5.Add(tbx_49_number);
+                square_5.Add(tbx_50_number);
+                square_5.Add(tbx_51_number);
+
+                square_6.Add(tbx_34_number);
+                square_6.Add(tbx_35_number);
+                square_6.Add(tbx_36_number);
+                square_6.Add(tbx_43_number);
+                square_6.Add(tbx_44_number);
+                square_6.Add(tbx_45_number);
+                square_6.Add(tbx_52_number);
+                square_6.Add(tbx_53_number);
+                square_6.Add(tbx_54_number);
+
+                square_7.Add(tbx_55_number);
+                square_7.Add(tbx_56_number);
+                square_7.Add(tbx_57_number);
+                square_7.Add(tbx_64_number);
+                square_7.Add(tbx_65_number);
+                square_7.Add(tbx_66_number);
+                square_7.Add(tbx_73_number);
+                square_7.Add(tbx_74_number);
+                square_7.Add(tbx_75_number);
+
+                square_8.Add(tbx_58_number);
+                square_8.Add(tbx_59_number);
+                square_8.Add(tbx_60_number);
+                square_8.Add(tbx_67_number);
+                square_8.Add(tbx_68_number);
+                square_8.Add(tbx_69_number);
+                square_8.Add(tbx_76_number);
+                square_8.Add(tbx_77_number);
+                square_8.Add(tbx_78_number);
+
+                square_9.Add(tbx_61_number);
+                square_9.Add(tbx_62_number);
+                square_9.Add(tbx_63_number);
+                square_9.Add(tbx_70_number);
+                square_9.Add(tbx_71_number);
+                square_9.Add(tbx_72_number);
+                square_9.Add(tbx_79_number);
+                square_9.Add(tbx_80_number);
+                square_9.Add(tbx_81_number);
+
+                if ((square_1.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((square_1.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((square_1.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((square_1.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((square_1.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((square_1.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((square_1.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((square_1.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((square_1.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((square_2.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((square_2.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((square_2.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((square_2.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((square_2.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((square_2.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((square_2.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((square_2.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((square_2.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((square_3.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((square_3.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((square_3.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((square_3.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((square_3.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((square_3.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((square_3.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((square_3.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((square_3.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((square_4.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((square_4.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((square_4.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((square_4.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((square_4.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((square_4.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((square_4.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((square_4.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((square_4.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((square_5.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((square_5.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((square_5.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((square_5.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((square_5.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((square_5.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((square_5.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((square_5.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((square_5.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((square_6.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((square_6.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((square_6.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((square_6.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((square_6.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((square_6.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((square_6.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((square_6.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((square_6.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((square_7.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((square_7.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((square_7.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((square_7.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((square_7.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((square_7.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((square_7.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((square_7.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((square_7.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((square_8.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((square_8.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((square_8.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((square_8.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((square_8.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((square_8.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((square_8.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((square_8.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((square_8.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((square_9.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((square_9.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((square_9.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((square_9.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((square_9.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((square_9.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((square_9.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((square_9.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((square_9.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                errorHandler(ex);
+                return false;
+            }
+        }
+
+        private bool check_vertical()
+        {
+            try
+            {
+                #region variables
+                int column_1_1 = 0;
+                int column_1_2 = 0;
+                int column_1_3 = 0;
+                int column_1_4 = 0;
+                int column_1_5 = 0;
+                int column_1_6 = 0;
+                int column_1_7 = 0;
+                int column_1_8 = 0;
+                int column_1_9 = 0;
+                int column_2_1 = 0;
+                int column_2_2 = 0;
+                int column_2_3 = 0;
+                int column_2_4 = 0;
+                int column_2_5 = 0;
+                int column_2_6 = 0;
+                int column_2_7 = 0;
+                int column_2_8 = 0;
+                int column_2_9 = 0;
+                int column_3_1 = 0;
+                int column_3_2 = 0;
+                int column_3_3 = 0;
+                int column_3_4 = 0;
+                int column_3_5 = 0;
+                int column_3_6 = 0;
+                int column_3_7 = 0;
+                int column_3_8 = 0;
+                int column_3_9 = 0;
+                int column_4_1 = 0;
+                int column_4_2 = 0;
+                int column_4_3 = 0;
+                int column_4_4 = 0;
+                int column_4_5 = 0;
+                int column_4_6 = 0;
+                int column_4_7 = 0;
+                int column_4_8 = 0;
+                int column_4_9 = 0;
+                int column_5_1 = 0;
+                int column_5_2 = 0;
+                int column_5_3 = 0;
+                int column_5_4 = 0;
+                int column_5_5 = 0;
+                int column_5_6 = 0;
+                int column_5_7 = 0;
+                int column_5_8 = 0;
+                int column_5_9 = 0;
+                int column_6_1 = 0;
+                int column_6_2 = 0;
+                int column_6_3 = 0;
+                int column_6_4 = 0;
+                int column_6_5 = 0;
+                int column_6_6 = 0;
+                int column_6_7 = 0;
+                int column_6_8 = 0;
+                int column_6_9 = 0;
+                int column_7_1 = 0;
+                int column_7_2 = 0;
+                int column_7_3 = 0;
+                int column_7_4 = 0;
+                int column_7_5 = 0;
+                int column_7_6 = 0;
+                int column_7_7 = 0;
+                int column_7_8 = 0;
+                int column_7_9 = 0;
+                int column_8_1 = 0;
+                int column_8_2 = 0;
+                int column_8_3 = 0;
+                int column_8_4 = 0;
+                int column_8_5 = 0;
+                int column_8_6 = 0;
+                int column_8_7 = 0;
+                int column_8_8 = 0;
+                int column_8_9 = 0;
+                int column_9_1 = 0;
+                int column_9_2 = 0;
+                int column_9_3 = 0;
+                int column_9_4 = 0;
+                int column_9_5 = 0;
+                int column_9_6 = 0;
+                int column_9_7 = 0;
+                int column_9_8 = 0;
+                int column_9_9 = 0;
+                #endregion
+
+                List<int> column_1 = new List<int>();
+                List<int> column_2 = new List<int>();
+                List<int> column_3 = new List<int>();
+                List<int> column_4 = new List<int>();
+                List<int> column_5 = new List<int>();
+                List<int> column_6 = new List<int>();
+                List<int> column_7 = new List<int>();
+                List<int> column_8 = new List<int>();
+                List<int> column_9 = new List<int>();
+
+                column_1.Add(tbx_1_number);
+                column_1.Add(tbx_10_number);
+                column_1.Add(tbx_19_number);
+                column_1.Add(tbx_28_number);
+                column_1.Add(tbx_37_number);
+                column_1.Add(tbx_46_number);
+                column_1.Add(tbx_55_number);
+                column_1.Add(tbx_64_number);
+                column_1.Add(tbx_73_number);
+
+                column_2.Add(tbx_2_number);
+                column_2.Add(tbx_11_number);
+                column_2.Add(tbx_20_number);
+                column_2.Add(tbx_29_number);
+                column_2.Add(tbx_38_number);
+                column_2.Add(tbx_47_number);
+                column_2.Add(tbx_56_number);
+                column_2.Add(tbx_65_number);
+                column_2.Add(tbx_74_number);
+
+                column_3.Add(tbx_3_number);
+                column_3.Add(tbx_12_number);
+                column_3.Add(tbx_21_number);
+                column_3.Add(tbx_30_number);
+                column_3.Add(tbx_39_number);
+                column_3.Add(tbx_48_number);
+                column_3.Add(tbx_57_number);
+                column_3.Add(tbx_66_number);
+                column_3.Add(tbx_75_number);
+
+                column_4.Add(tbx_4_number);
+                column_4.Add(tbx_13_number);
+                column_4.Add(tbx_22_number);
+                column_4.Add(tbx_31_number);
+                column_4.Add(tbx_40_number);
+                column_4.Add(tbx_49_number);
+                column_4.Add(tbx_58_number);
+                column_4.Add(tbx_67_number);
+                column_4.Add(tbx_76_number);
+
+                column_5.Add(tbx_5_number);
+                column_5.Add(tbx_14_number);
+                column_5.Add(tbx_23_number);
+                column_5.Add(tbx_32_number);
+                column_5.Add(tbx_41_number);
+                column_5.Add(tbx_50_number);
+                column_5.Add(tbx_59_number);
+                column_5.Add(tbx_68_number);
+                column_5.Add(tbx_77_number);
+
+                column_6.Add(tbx_6_number);
+                column_6.Add(tbx_15_number);
+                column_6.Add(tbx_24_number);
+                column_6.Add(tbx_33_number);
+                column_6.Add(tbx_42_number);
+                column_6.Add(tbx_51_number);
+                column_6.Add(tbx_60_number);
+                column_6.Add(tbx_69_number);
+                column_6.Add(tbx_78_number);
+
+                column_7.Add(tbx_7_number);
+                column_7.Add(tbx_16_number);
+                column_7.Add(tbx_25_number);
+                column_7.Add(tbx_34_number);
+                column_7.Add(tbx_43_number);
+                column_7.Add(tbx_52_number);
+                column_7.Add(tbx_61_number);
+                column_7.Add(tbx_70_number);
+                column_7.Add(tbx_79_number);
+
+                column_8.Add(tbx_8_number);
+                column_8.Add(tbx_17_number);
+                column_8.Add(tbx_26_number);
+                column_8.Add(tbx_35_number);
+                column_8.Add(tbx_44_number);
+                column_8.Add(tbx_53_number);
+                column_8.Add(tbx_62_number);
+                column_8.Add(tbx_71_number);
+                column_8.Add(tbx_80_number);
+
+                column_9.Add(tbx_9_number);
+                column_9.Add(tbx_18_number);
+                column_9.Add(tbx_27_number);
+                column_9.Add(tbx_36_number);
+                column_9.Add(tbx_45_number);
+                column_9.Add(tbx_54_number);
+                column_9.Add(tbx_63_number);
+                column_9.Add(tbx_72_number);
+                column_9.Add(tbx_81_number);
+
+                if ((column_1.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((column_1.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((column_1.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((column_1.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((column_1.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((column_1.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((column_1.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((column_1.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((column_1.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((column_2.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((column_2.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((column_2.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((column_2.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((column_2.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((column_2.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((column_2.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((column_2.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((column_2.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((column_3.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((column_3.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((column_3.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((column_3.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((column_3.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((column_3.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((column_3.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((column_3.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((column_3.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((column_4.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((column_4.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((column_4.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((column_4.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((column_4.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((column_4.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((column_4.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((column_4.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((column_4.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((column_5.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((column_5.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((column_5.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((column_5.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((column_5.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((column_5.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((column_5.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((column_5.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((column_5.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((column_6.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((column_6.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((column_6.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((column_6.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((column_6.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((column_6.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((column_6.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((column_6.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((column_6.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((column_7.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((column_7.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((column_7.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((column_7.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((column_7.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((column_7.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((column_7.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((column_7.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((column_7.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((column_8.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((column_8.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((column_8.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((column_8.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((column_8.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((column_8.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((column_8.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((column_8.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((column_8.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((column_9.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((column_9.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((column_9.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((column_9.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((column_9.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((column_9.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((column_9.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((column_9.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((column_9.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                errorHandler(ex);
+                return false;
+            }
+        }
+
+        private bool check_horizontal()
+        {
+            try
+            {
+                #region variables
+                int row_1_1 = 0;
+                int row_1_2 = 0;
+                int row_1_3 = 0;
+                int row_1_4 = 0;
+                int row_1_5 = 0;
+                int row_1_6 = 0;
+                int row_1_7 = 0;
+                int row_1_8 = 0;
+                int row_1_9 = 0;
+                int row_2_1 = 0;
+                int row_2_2 = 0;
+                int row_2_3 = 0;
+                int row_2_4 = 0;
+                int row_2_5 = 0;
+                int row_2_6 = 0;
+                int row_2_7 = 0;
+                int row_2_8 = 0;
+                int row_2_9 = 0;
+                int row_3_1 = 0;
+                int row_3_2 = 0;
+                int row_3_3 = 0;
+                int row_3_4 = 0;
+                int row_3_5 = 0;
+                int row_3_6 = 0;
+                int row_3_7 = 0;
+                int row_3_8 = 0;
+                int row_3_9 = 0;
+                int row_4_1 = 0;
+                int row_4_2 = 0;
+                int row_4_3 = 0;
+                int row_4_4 = 0;
+                int row_4_5 = 0;
+                int row_4_6 = 0;
+                int row_4_7 = 0;
+                int row_4_8 = 0;
+                int row_4_9 = 0;
+                int row_5_1 = 0;
+                int row_5_2 = 0;
+                int row_5_3 = 0;
+                int row_5_4 = 0;
+                int row_5_5 = 0;
+                int row_5_6 = 0;
+                int row_5_7 = 0;
+                int row_5_8 = 0;
+                int row_5_9 = 0;
+                int row_6_1 = 0;
+                int row_6_2 = 0;
+                int row_6_3 = 0;
+                int row_6_4 = 0;
+                int row_6_5 = 0;
+                int row_6_6 = 0;
+                int row_6_7 = 0;
+                int row_6_8 = 0;
+                int row_6_9 = 0;
+                int row_7_1 = 0;
+                int row_7_2 = 0;
+                int row_7_3 = 0;
+                int row_7_4 = 0;
+                int row_7_5 = 0;
+                int row_7_6 = 0;
+                int row_7_7 = 0;
+                int row_7_8 = 0;
+                int row_7_9 = 0;
+                int row_8_1 = 0;
+                int row_8_2 = 0;
+                int row_8_3 = 0;
+                int row_8_4 = 0;
+                int row_8_5 = 0;
+                int row_8_6 = 0;
+                int row_8_7 = 0;
+                int row_8_8 = 0;
+                int row_8_9 = 0;
+                int row_9_1 = 0;
+                int row_9_2 = 0;
+                int row_9_3 = 0;
+                int row_9_4 = 0;
+                int row_9_5 = 0;
+                int row_9_6 = 0;
+                int row_9_7 = 0;
+                int row_9_8 = 0;
+                int row_9_9 = 0;
+                #endregion
+
+                List<int> row_1 = new List<int>();
+                List<int> row_2 = new List<int>();
+                List<int> row_3 = new List<int>();
+                List<int> row_4 = new List<int>();
+                List<int> row_5 = new List<int>();
+                List<int> row_6 = new List<int>();
+                List<int> row_7 = new List<int>();
+                List<int> row_8 = new List<int>();
+                List<int> row_9 = new List<int>();
+
+                row_1.Add(tbx_1_number);
+                row_1.Add(tbx_2_number);
+                row_1.Add(tbx_3_number);
+                row_1.Add(tbx_4_number);
+                row_1.Add(tbx_5_number);
+                row_1.Add(tbx_6_number);
+                row_1.Add(tbx_7_number);
+                row_1.Add(tbx_8_number);
+                row_1.Add(tbx_9_number);
+
+                row_2.Add(tbx_10_number);
+                row_2.Add(tbx_11_number);
+                row_2.Add(tbx_12_number);
+                row_2.Add(tbx_13_number);
+                row_2.Add(tbx_14_number);
+                row_2.Add(tbx_15_number);
+                row_2.Add(tbx_16_number);
+                row_2.Add(tbx_17_number);
+                row_2.Add(tbx_18_number);
+
+                row_3.Add(tbx_19_number);
+                row_3.Add(tbx_20_number);
+                row_3.Add(tbx_21_number);
+                row_3.Add(tbx_22_number);
+                row_3.Add(tbx_23_number);
+                row_3.Add(tbx_24_number);
+                row_3.Add(tbx_25_number);
+                row_3.Add(tbx_26_number);
+                row_3.Add(tbx_27_number);
+
+                row_4.Add(tbx_28_number);
+                row_4.Add(tbx_29_number);
+                row_4.Add(tbx_30_number);
+                row_4.Add(tbx_31_number);
+                row_4.Add(tbx_32_number);
+                row_4.Add(tbx_33_number);
+                row_4.Add(tbx_34_number);
+                row_4.Add(tbx_35_number);
+                row_4.Add(tbx_36_number);
+
+                row_5.Add(tbx_37_number);
+                row_5.Add(tbx_38_number);
+                row_5.Add(tbx_39_number);
+                row_5.Add(tbx_40_number);
+                row_5.Add(tbx_41_number);
+                row_5.Add(tbx_42_number);
+                row_5.Add(tbx_43_number);
+                row_5.Add(tbx_44_number);
+                row_5.Add(tbx_45_number);
+
+                row_6.Add(tbx_46_number);
+                row_6.Add(tbx_47_number);
+                row_6.Add(tbx_48_number);
+                row_6.Add(tbx_49_number);
+                row_6.Add(tbx_50_number);
+                row_6.Add(tbx_51_number);
+                row_6.Add(tbx_52_number);
+                row_6.Add(tbx_53_number);
+                row_6.Add(tbx_54_number);
+
+                row_7.Add(tbx_55_number);
+                row_7.Add(tbx_56_number);
+                row_7.Add(tbx_57_number);
+                row_7.Add(tbx_58_number);
+                row_7.Add(tbx_59_number);
+                row_7.Add(tbx_60_number);
+                row_7.Add(tbx_61_number);
+                row_7.Add(tbx_62_number);
+                row_7.Add(tbx_63_number);
+
+                row_8.Add(tbx_64_number);
+                row_8.Add(tbx_65_number);
+                row_8.Add(tbx_66_number);
+                row_8.Add(tbx_67_number);
+                row_8.Add(tbx_68_number);
+                row_8.Add(tbx_69_number);
+                row_8.Add(tbx_70_number);
+                row_8.Add(tbx_71_number);
+                row_8.Add(tbx_72_number);
+
+                row_9.Add(tbx_73_number);
+                row_9.Add(tbx_74_number);
+                row_9.Add(tbx_75_number);
+                row_9.Add(tbx_76_number);
+                row_9.Add(tbx_77_number);
+                row_9.Add(tbx_78_number);
+                row_9.Add(tbx_79_number);
+                row_9.Add(tbx_80_number);
+                row_9.Add(tbx_81_number);
+
+                if ((row_1.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((row_1.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((row_1.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((row_1.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((row_1.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((row_1.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((row_1.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((row_1.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((row_1.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((row_2.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((row_2.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((row_2.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((row_2.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((row_2.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((row_2.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((row_2.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((row_2.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((row_2.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((row_3.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((row_3.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((row_3.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((row_3.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((row_3.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((row_3.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((row_3.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((row_3.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((row_3.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((row_4.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((row_4.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((row_4.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((row_4.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((row_4.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((row_4.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((row_4.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((row_4.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((row_4.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((row_5.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((row_5.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((row_5.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((row_5.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((row_5.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((row_5.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((row_5.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((row_5.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((row_5.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((row_6.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((row_6.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((row_6.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((row_6.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((row_6.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((row_6.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((row_6.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((row_6.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((row_6.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((row_7.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((row_7.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((row_7.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((row_7.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((row_7.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((row_7.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((row_7.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((row_7.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((row_7.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((row_8.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((row_8.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((row_8.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((row_8.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((row_8.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((row_8.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((row_8.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((row_8.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((row_8.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+                if ((row_9.Where(s => s.Equals(1)).Count()) >= 2)
+                    return false;
+                if ((row_9.Where(s => s.Equals(2)).Count()) >= 2)
+                    return false;
+                if ((row_9.Where(s => s.Equals(3)).Count()) >= 2)
+                    return false;
+                if ((row_9.Where(s => s.Equals(4)).Count()) >= 2)
+                    return false;
+                if ((row_9.Where(s => s.Equals(5)).Count()) >= 2)
+                    return false;
+                if ((row_9.Where(s => s.Equals(6)).Count()) >= 2)
+                    return false;
+                if ((row_9.Where(s => s.Equals(7)).Count()) >= 2)
+                    return false;
+                if ((row_9.Where(s => s.Equals(8)).Count()) >= 2)
+                    return false;
+                if ((row_9.Where(s => s.Equals(9)).Count()) >= 2)
+                    return false;
+
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                errorHandler(ex);
+                return false;
+            }
+        }
+
+        private void btn_previous_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                errorHandler(ex);
+            }
+        }
+
+        private void btn_next_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                errorHandler(ex);
+            }
+        }
     }
 }

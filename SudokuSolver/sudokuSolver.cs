@@ -8,13 +8,13 @@ namespace SudokuSolver
 {
     public class sudokuSolver
     {
-        int[] gridInput;
+        sudokuGrid gridInput;
 
-        public sudokuSolver(int[] data)
+        public sudokuSolver(sudokuGrid _grid)
         {
             try
             {
-                gridInput = data;
+                gridInput = _grid;
             }
             catch (Exception ex)
             {
@@ -43,15 +43,16 @@ namespace SudokuSolver
             }
         }
 
-        public void solve()
+        public sudokuGrid[] solve()
         {
             try
             {
-
+                return null;
             }
             catch (Exception ex)
             {
                 errorHandler(ex);
+                return null;
             }
         }
     }
