@@ -1441,8 +1441,10 @@ namespace SudokuSolver
                         lbl_labelResultPage.Visible = true;
                         numberOfResults = sudokuGrids.Length;
                         lbl_numOfResults.Text = (numberOfResults >= 1 ? ""+numberOfResults : "0");
-                        lbl_currentPage.Text = "" + currentResultIndex;
-                        btn_next.Visible = (numberOfResults >= 2 ? true : false);
+                        int page = currentResultIndex + 1;
+                        lbl_currentPage.Text = "" + page;
+                        btn_next.Enabled = (numberOfResults >= 2 ? true : false);
+                        displayResult(currentResultIndex);
                     }
                     else
                     {
@@ -5254,7 +5256,20 @@ namespace SudokuSolver
         {
             try
             {
+                currentResultIndex--;
+                int currentPage = currentResultIndex + 1;
+                lbl_currentPage.Text = currentPage.ToString();
+                btn_next.Enabled = true;
 
+                if (currentResultIndex > 0)
+                {
+                    displayResult(currentResultIndex);
+                }
+                else
+                {
+                    displayResult(currentResultIndex);
+                    btn_previous.Enabled = false;
+                }
             }
             catch (Exception ex)
             {
@@ -5266,12 +5281,118 @@ namespace SudokuSolver
         {
             try
             {
+                currentResultIndex++;
+                int currentPage = currentResultIndex + 1;
+                lbl_currentPage.Text = currentPage.ToString();
+                btn_previous.Enabled = true;
 
+                if (currentResultIndex < numberOfResults-1)
+                {
+                    displayResult(currentResultIndex);
+                }
+                else
+                {
+                    displayResult(currentResultIndex);
+                    btn_next.Enabled = false;
+                }
             }
             catch (Exception ex)
             {
                 errorHandler(ex);
             }
         }
+
+        private void displayResult(int index)
+        {
+            try
+            {
+                tbx_1.Text = "" + sudokuGrids[index].square_1;
+                tbx_2.Text = "" + sudokuGrids[index].square_2;
+                tbx_3.Text = "" + sudokuGrids[index].square_3;
+                tbx_4.Text = "" + sudokuGrids[index].square_4;
+                tbx_5.Text = "" + sudokuGrids[index].square_5;
+                tbx_6.Text = "" + sudokuGrids[index].square_6;
+                tbx_7.Text = "" + sudokuGrids[index].square_7;
+                tbx_8.Text = "" + sudokuGrids[index].square_8;
+                tbx_9.Text = "" + sudokuGrids[index].square_9;
+                tbx_10.Text = "" + sudokuGrids[index].square_10;
+                tbx_11.Text = "" + sudokuGrids[index].square_11;
+                tbx_12.Text = "" + sudokuGrids[index].square_12;
+                tbx_13.Text = "" + sudokuGrids[index].square_13;
+                tbx_14.Text = "" + sudokuGrids[index].square_14;
+                tbx_15.Text = "" + sudokuGrids[index].square_15;
+                tbx_16.Text = "" + sudokuGrids[index].square_16;
+                tbx_17.Text = "" + sudokuGrids[index].square_17;
+                tbx_18.Text = "" + sudokuGrids[index].square_18;
+                tbx_19.Text = "" + sudokuGrids[index].square_19;
+                tbx_20.Text = "" + sudokuGrids[index].square_20;
+                tbx_21.Text = "" + sudokuGrids[index].square_21;
+                tbx_22.Text = "" + sudokuGrids[index].square_22;
+                tbx_23.Text = "" + sudokuGrids[index].square_23;
+                tbx_24.Text = "" + sudokuGrids[index].square_24;
+                tbx_25.Text = "" + sudokuGrids[index].square_25;
+                tbx_26.Text = "" + sudokuGrids[index].square_26;
+                tbx_27.Text = "" + sudokuGrids[index].square_27;
+                tbx_28.Text = "" + sudokuGrids[index].square_28;
+                tbx_29.Text = "" + sudokuGrids[index].square_29;
+                tbx_30.Text = "" + sudokuGrids[index].square_30;
+                tbx_31.Text = "" + sudokuGrids[index].square_31;
+                tbx_32.Text = "" + sudokuGrids[index].square_32;
+                tbx_33.Text = "" + sudokuGrids[index].square_33;
+                tbx_34.Text = "" + sudokuGrids[index].square_34;
+                tbx_35.Text = "" + sudokuGrids[index].square_35;
+                tbx_36.Text = "" + sudokuGrids[index].square_36;
+                tbx_37.Text = "" + sudokuGrids[index].square_37;
+                tbx_38.Text = "" + sudokuGrids[index].square_38;
+                tbx_39.Text = "" + sudokuGrids[index].square_39;
+                tbx_40.Text = "" + sudokuGrids[index].square_40;
+                tbx_41.Text = "" + sudokuGrids[index].square_41;
+                tbx_42.Text = "" + sudokuGrids[index].square_42;
+                tbx_43.Text = "" + sudokuGrids[index].square_43;
+                tbx_44.Text = "" + sudokuGrids[index].square_44;
+                tbx_45.Text = "" + sudokuGrids[index].square_45;
+                tbx_46.Text = "" + sudokuGrids[index].square_46;
+                tbx_47.Text = "" + sudokuGrids[index].square_47;
+                tbx_48.Text = "" + sudokuGrids[index].square_48;
+                tbx_49.Text = "" + sudokuGrids[index].square_49;
+                tbx_50.Text = "" + sudokuGrids[index].square_50;
+                tbx_51.Text = "" + sudokuGrids[index].square_51;
+                tbx_52.Text = "" + sudokuGrids[index].square_52;
+                tbx_53.Text = "" + sudokuGrids[index].square_53;
+                tbx_54.Text = "" + sudokuGrids[index].square_54;
+                tbx_55.Text = "" + sudokuGrids[index].square_55;
+                tbx_56.Text = "" + sudokuGrids[index].square_56;
+                tbx_57.Text = "" + sudokuGrids[index].square_57;
+                tbx_58.Text = "" + sudokuGrids[index].square_58;
+                tbx_59.Text = "" + sudokuGrids[index].square_59;
+                tbx_60.Text = "" + sudokuGrids[index].square_60;
+                tbx_61.Text = "" + sudokuGrids[index].square_61;
+                tbx_62.Text = "" + sudokuGrids[index].square_62;
+                tbx_63.Text = "" + sudokuGrids[index].square_63;
+                tbx_64.Text = "" + sudokuGrids[index].square_64;
+                tbx_65.Text = "" + sudokuGrids[index].square_65;
+                tbx_66.Text = "" + sudokuGrids[index].square_66;
+                tbx_67.Text = "" + sudokuGrids[index].square_67;
+                tbx_68.Text = "" + sudokuGrids[index].square_68;
+                tbx_69.Text = "" + sudokuGrids[index].square_69;
+                tbx_70.Text = "" + sudokuGrids[index].square_70;
+                tbx_71.Text = "" + sudokuGrids[index].square_71;
+                tbx_72.Text = "" + sudokuGrids[index].square_72;
+                tbx_73.Text = "" + sudokuGrids[index].square_73;
+                tbx_74.Text = "" + sudokuGrids[index].square_74;
+                tbx_75.Text = "" + sudokuGrids[index].square_75;
+                tbx_76.Text = "" + sudokuGrids[index].square_76;
+                tbx_77.Text = "" + sudokuGrids[index].square_77;
+                tbx_78.Text = "" + sudokuGrids[index].square_78;
+                tbx_79.Text = "" + sudokuGrids[index].square_79;
+                tbx_80.Text = "" + sudokuGrids[index].square_80;
+                tbx_81.Text = "" + sudokuGrids[index].square_81;
+            }
+            catch (Exception ex)
+            {
+                errorHandler(ex);
+            }
+        }
+
     }
 }

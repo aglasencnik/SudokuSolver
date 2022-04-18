@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace SudokuSolver
 {
+    [Serializable]
     public class sudokuGrid
     {
         public int square_1 { get; set; } = 0;
